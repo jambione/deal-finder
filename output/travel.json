@@ -1,7 +1,20 @@
 {
   "category": "travel",
-  "generated_at": "2026-06-19T14:16:13.761191+00:00",
+  "generated_at": "2026-06-19T14:28:48.867925+00:00",
   "deals": [
+    {
+      "title": "Scandinavian Airlines: Miami \u2013 Mumbai, India.  $869 (Basic Economy) / $969 (Regular Economy). Roundtrip, including all Taxes",
+      "url": "https://www.theflightdeal.com/2026/06/19/scandinavian-airlines-miami-mumbai-india-869-basic-economy-969-regular-economy-roundtrip-including-all-taxes/",
+      "price": 869.0,
+      "original_price": null,
+      "source": "theflightdeal",
+      "votes": 0,
+      "posted_at": "2026-06-19T14:23:15+00:00",
+      "image_url": null,
+      "category": "travel",
+      "discount_pct": 0,
+      "score": 20.0
+    },
     {
       "title": "Korean Air: New York \u2013 Ho Chi Minh City, Vietnam. $935. Roundtrip, including all Taxes",
       "url": "https://www.theflightdeal.com/2026/06/19/korean-air-new-york-ho-chi-minh-city-vietnam-935-roundtrip-including-all-taxes/",
@@ -206,19 +219,6 @@
       "source": "theflightdeal",
       "votes": 0,
       "posted_at": "2026-06-18T16:23:41+00:00",
-      "image_url": null,
-      "category": "travel",
-      "discount_pct": 0,
-      "score": 10.0
-    },
-    {
-      "title": "Korean Air: New York \u2013 Ulaanbaatar, Mongolia. $929. Roundtrip, including all Taxes",
-      "url": "https://www.theflightdeal.com/2026/06/18/korean-air-new-york-ulaanbaatar-mongolia-929-roundtrip-including-all-taxes/",
-      "price": 929.0,
-      "original_price": null,
-      "source": "theflightdeal",
-      "votes": 0,
-      "posted_at": "2026-06-18T16:13:04+00:00",
       "image_url": null,
       "category": "travel",
       "discount_pct": 0,

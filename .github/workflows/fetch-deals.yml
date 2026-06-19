@@ -27,6 +27,8 @@ jobs:
           AMAZON_SECRET_KEY: ${{ secrets.AMAZON_SECRET_KEY }}
           AMAZON_PARTNER_TAG: ${{ secrets.AMAZON_PARTNER_TAG }}
           BESTBUY_API_KEY: ${{ secrets.BESTBUY_API_KEY }}
+          WALMART_API_KEY: ${{ secrets.WALMART_API_KEY }}
+          NEWEGG_API_KEY: ${{ secrets.NEWEGG_API_KEY }}
         run: python src/main.py
 
       - name: Commit updated deals

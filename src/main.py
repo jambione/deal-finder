@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(__file__))
 
 from sources import slickdeals, reddit, amazon, retailers, flights, games, software
+from sources import dealnews, nineto5toys, bradsdeals, humblebundle, epicgames
 from scorer import score_deals
 from categorizer import assign_categories
 from matcher import match_searches
@@ -45,7 +46,10 @@ def main():
     print(f"[main] starting run at {now}")
 
     raw = []
-    for source_module in [slickdeals, reddit, amazon, retailers, flights, games, software]:
+    for source_module in [
+        slickdeals, reddit, amazon, retailers, flights, games, software,
+        dealnews, nineto5toys, bradsdeals, humblebundle, epicgames,
+    ]:
         try:
             fetched = source_module.fetch()
             print(f"[main] {source_module.__name__.split('.')[-1]}: {len(fetched)} deals")
