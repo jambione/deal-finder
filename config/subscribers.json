@@ -4,6 +4,11 @@
       "email": "you@example.com",
       "name": "Jon",
       "active": true
+    },
+    {
+      "email": "jon@jbrasfield.com",
+      "name": "",
+      "active": true
     }
   ]
 }
