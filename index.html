@@ -213,6 +213,31 @@
       background: var(--surface); border: 0.5px solid var(--border); color: var(--text-muted);
     }
 
+    /* Settings */
+    .settings-card {
+      border: 0.5px solid var(--border); border-radius: 12px;
+      padding: 18px 20px; margin-bottom: 18px; background: var(--surface);
+    }
+    .settings-h3 { font-size: 15px; font-weight: 600; color: var(--text); margin: 0 0 4px; }
+    .settings-p { font-size: 12px; color: var(--text-muted); margin: 0 0 14px; line-height: 1.5; }
+    .settings-note { font-size: 11px; color: var(--text-muted); margin: 12px 0 0; line-height: 1.5; }
+    .settings-input {
+      padding: 8px 10px; border: 0.5px solid var(--border); border-radius: 8px;
+      font-size: 14px; background: var(--bg); color: var(--text);
+    }
+    .settings-input:focus { outline: none; border-color: var(--gold); }
+    .settings-btn { padding: 8px 18px; border-radius: 8px; border: none; background: var(--navy); color: #fff; cursor: pointer; font-size: 13px; font-weight: 600; }
+    .sub-list { display: flex; flex-direction: column; }
+    .sub-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border);
+    }
+    .sub-row:last-child { border-bottom: none; }
+    .sub-email { font-size: 14px; color: var(--text); }
+    .sub-email.sub-inactive { color: var(--text-muted); text-decoration: line-through; }
+    .sub-name { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+    .sub-add { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
     .btn-add-search {
       width: 100%;
       font-size: 12px;
@@ -440,6 +465,10 @@
   </div>
   <div class="nav-right">
     <span class="updated-label" id="updated-label">Loading...</span>
+    <button class="btn-ghost" id="run-now-btn" onclick="runNow()" title="Trigger a fresh pipeline run on GitHub">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Run now
+    </button>
     <button class="btn-ghost" onclick="loadAll()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
       Refresh
@@ -539,6 +568,7 @@
   let allDeals = [];
   let searchResults = [];
   let searchDefs = [];
+  let subscribers = [];
   let suggestions = [];
   let activeCategory = 'all';
   let activeSearchId = null;
@@ -548,7 +578,7 @@
   async function loadAll() {
     document.getElementById('main-content').innerHTML = '<div class="loading">Loading deals...</div>';
     try {
-      const [elec, app, trav, gms, sw, srch, sugg, defs] = await Promise.all([
+      const [elec, app, trav, gms, sw, srch, sugg, defs, subs] = await Promise.all([
         fetch(BASE + 'output/electronics.json').then(r => r.json()),
         fetch(BASE + 'output/apparel.json').then(r => r.json()),
         fetch(BASE + 'output/travel.json').then(r => r.json()),
@@ -557,6 +587,7 @@
         fetch(BASE + 'output/searches.json').then(r => r.json()),
         fetch(BASE + 'output/suggestions.json').then(r => r.json()),
         fetch(BASE + 'config/searches.json').then(r => r.json()).catch(() => ({ searches: [] })),
+        fetch(BASE + 'config/subscribers.json').then(r => r.json()).catch(() => ({ subscribers: [] })),
       ]);
 
       allDeals = [
@@ -568,6 +599,7 @@
       ];
       searchResults = srch.results || [];
       searchDefs = defs.searches || [];
+      subscribers = subs.subscribers || [];
       suggestions = sugg.suggestions || [];
 
       const latestDate = elec.generated_at || app.generated_at || trav.generated_at;
@@ -787,15 +819,41 @@
 
   function renderSettings() {
     const pat = localStorage.getItem('gh_pat') || '';
+    const rows = subscribers.length ? subscribers.map((s, i) => `
+      <div class="sub-row">
+        <div class="sub-info">
+          <div class="sub-email ${s.active ? '' : 'sub-inactive'}">${esc(s.email)}</div>
+          ${s.name ? `<div class="sub-name">${esc(s.name)}</div>` : ''}
+        </div>
+        <div class="search-actions">
+          <button class="btn-mini" onclick="toggleSubscriber(${i})">${s.active ? 'Pause' : 'Resume'}</button>
+          <button class="btn-mini btn-mini-danger" onclick="unsubscribe(${i})">Remove</button>
+        </div>
+      </div>`).join('') : '<div class="empty" style="padding:16px 0">No subscribers yet.</div>';
+
     return `
       <div class="section-title">Settings</div>
-      <div style="max-width:480px">
-        <div class="form-group" style="margin-bottom:16px">
-          <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px">GitHub Personal Access Token</label>
-          <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px">Required to save new searches back to the repo. Generate a token with <code>repo</code> scope at github.com/settings/tokens.</p>
-          <input type="password" id="pat-input" value="${esc(pat)}" placeholder="ghp_..." style="width:100%;padding:8px 10px;border:0.5px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg);color:var(--text)">
+      <div style="max-width:520px">
+
+        <div class="settings-card">
+          <h3 class="settings-h3">Email subscribers</h3>
+          <p class="settings-p">People here get an email with the top 5 discounts each pipeline run. Paused subscribers stay on the list but don't receive emails.</p>
+          <div class="sub-list">${rows}</div>
+          <div class="sub-add">
+            <input type="email" id="sub-email" placeholder="name@example.com" class="settings-input" style="flex:2">
+            <input type="text" id="sub-name" placeholder="Name (optional)" class="settings-input" style="flex:1">
+            <button class="btn-save settings-btn" onclick="subscribe()">Subscribe</button>
+          </div>
+          <p class="settings-note">Note: this list lives in the public repo, so emails are publicly visible. Sending also requires SMTP secrets configured in GitHub Actions.</p>
         </div>
-        <button class="btn-save" style="padding:8px 20px;border-radius:8px;border:none;background:var(--navy);color:#fff;cursor:pointer;font-size:13px;font-weight:600" onclick="savePAT()">Save</button>
+
+        <div class="settings-card">
+          <h3 class="settings-h3">GitHub Personal Access Token</h3>
+          <p class="settings-p">Required to save searches and subscribers back to the repo. Generate a token with <code>repo</code> scope at github.com/settings/tokens.</p>
+          <input type="password" id="pat-input" value="${esc(pat)}" placeholder="ghp_..." class="settings-input" style="width:100%">
+          <button class="btn-save settings-btn" style="margin-top:10px" onclick="savePAT()">Save token</button>
+        </div>
+
       </div>
     `;
   }
@@ -944,6 +1002,101 @@
       if (activeSearchId === id) activeSearchId = null;
       renderSearchList();
       renderMain();
+    }
+  }
+
+  // Generic CRUD writer for config/subscribers.json
+  async function writeSubscribers(mutator, message) {
+    const pat = localStorage.getItem('gh_pat');
+    if (!pat) {
+      alert('Enter your GitHub PAT in Settings to manage subscribers.');
+      return false;
+    }
+    const owner = 'jambione', repo = 'deal-finder', path = 'config/subscribers.json';
+    try {
+      const fileResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' }
+      });
+      if (!fileResp.ok) throw new Error(`read failed (${fileResp.status})`);
+      const fileData = await fileResp.json();
+      const current = JSON.parse(atob(fileData.content.replace(/\n/g, '')));
+      current.subscribers = mutator([...(current.subscribers || [])]);
+
+      const putResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, content: btoa(JSON.stringify(current, null, 2)), sha: fileData.sha }),
+      });
+      if (!putResp.ok) throw new Error(`write failed (${putResp.status})`);
+      subscribers = current.subscribers;
+      return true;
+    } catch (e) {
+      alert(`Failed: ${e.message}`);
+      return false;
+    }
+  }
+
+  async function subscribe() {
+    const email = document.getElementById('sub-email').value.trim();
+    const name = document.getElementById('sub-name').value.trim();
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      alert('Enter a valid email address.');
+      return;
+    }
+    if (subscribers.some(s => s.email.toLowerCase() === email.toLowerCase())) {
+      alert('That email is already subscribed.');
+      return;
+    }
+    const ok = await writeSubscribers(subs => {
+      subs.push({ email, name, active: true });
+      return subs;
+    }, `chore: subscribe ${email}`);
+    if (ok) { alert(`Subscribed ${email}. Emails start on the next pipeline run.`); renderMain(); }
+  }
+
+  async function unsubscribe(i) {
+    const sub = subscribers[i];
+    if (!sub || !confirm(`Remove ${sub.email} from the list?`)) return;
+    const ok = await writeSubscribers(subs => subs.filter(s => s.email.toLowerCase() !== sub.email.toLowerCase()),
+      `chore: unsubscribe ${sub.email}`);
+    if (ok) renderMain();
+  }
+
+  async function toggleSubscriber(i) {
+    const sub = subscribers[i];
+    if (!sub) return;
+    const ok = await writeSubscribers(subs => subs.map(s =>
+      s.email.toLowerCase() === sub.email.toLowerCase() ? { ...s, active: !s.active } : s),
+      `chore: ${sub.active ? 'pause' : 'resume'} ${sub.email}`);
+    if (ok) renderMain();
+  }
+
+  async function runNow() {
+    const pat = localStorage.getItem('gh_pat');
+    if (!pat) {
+      alert('Enter your GitHub PAT in Settings to trigger a run.');
+      setCategory('settings');
+      return;
+    }
+    const btn = document.getElementById('run-now-btn');
+    const owner = 'jambione', repo = 'deal-finder', workflow = 'fetch-deals.yml';
+    try {
+      if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
+      const resp = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow}/dispatches`, {
+        method: 'POST',
+        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: 'main' }),
+      });
+      if (resp.status === 204) {
+        alert('Pipeline started. It usually takes 1-2 minutes. Hit Refresh once it finishes to load the new deals.');
+      } else {
+        const txt = await resp.text();
+        throw new Error(`${resp.status} ${txt}`);
+      }
+    } catch (e) {
+      alert(`Failed to start run: ${e.message}`);
+    } finally {
+      if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
     }
   }
 
