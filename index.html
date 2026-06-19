@@ -633,9 +633,9 @@
   let searchDefs = [];
   let subscribers = [];
   let suggestions = [];
-  let activeCategory = 'all';
+  let activeCategory = localStorage.getItem('bd_category') || 'all';
   let activeSearchId = null;
-  let activeSort = 'score';
+  let activeSort = localStorage.getItem('bd_sort') || 'score';
   let filterText = '';
 
   async function loadAll() {
@@ -830,7 +830,7 @@
       <input type="text" class="filter-input" id="filter-input" placeholder="Filter deals..."
              value="${filterText.replace(/"/g, '&quot;')}" oninput="onFilterInput(this.value)">
       <label for="sort-select">Sort by</label>
-      <select class="sort-select" id="sort-select" onchange="activeSort=this.value;renderMain()">
+      <select class="sort-select" id="sort-select" onchange="activeSort=this.value;localStorage.setItem('bd_sort',this.value);renderMain()">
         <option value="score"    ${activeSort==='score'    ?'selected':''}>Best score</option>
         <option value="discount" ${activeSort==='discount' ?'selected':''}>Greatest discount</option>
         <option value="recent"   ${activeSort==='recent'   ?'selected':''}>Most recent</option>
@@ -948,6 +948,7 @@
 
   function setCategory(cat) {
     activeCategory = cat;
+    if (!['settings'].includes(cat)) localStorage.setItem('bd_category', cat);
     if (cat !== 'searches') activeSearchId = null;
     document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.cat === cat));
     document.querySelectorAll('.mobile-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
