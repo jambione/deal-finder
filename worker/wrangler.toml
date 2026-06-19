@@ -1,0 +1,10 @@
+name = "deals-subscribe"
+main = "subscribe-worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+GH_OWNER = "jambione"
+GH_REPO = "deal-finder"
+# HMAC_SECRET and GH_TOKEN must be set as secrets:
+#   wrangler secret put GH_TOKEN
+#   wrangler secret put HMAC_SECRET

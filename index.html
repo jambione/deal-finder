@@ -238,6 +238,18 @@
     .sub-name { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
     .sub-add { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 
+    /* Admin gating: hidden by default, shown only in admin mode */
+    .admin-only { display: none !important; }
+    body.admin .admin-only { display: flex !important; }
+
+    .btn-subscribe {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; padding: 7px 14px;
+      border-radius: 20px; border: none; cursor: pointer;
+      background: var(--gold); color: var(--navy);
+    }
+    .btn-subscribe:hover { filter: brightness(1.05); }
+
     .btn-add-search {
       width: 100%;
       font-size: 12px;
@@ -295,6 +307,13 @@
     }
     .deal-card:hover { border-color: rgba(0,0,0,0.2); }
     .deal-card.suggestion { border: 2px solid var(--gold); }
+
+    .deal-thumb {
+      width: 64px; height: 64px; flex-shrink: 0;
+      border-radius: 8px; object-fit: contain;
+      background: #fff; border: 0.5px solid var(--border);
+    }
+    @media (max-width: 768px) { .deal-thumb { width: 52px; height: 52px; } }
 
     .deal-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 5px; }
 
@@ -465,9 +484,17 @@
   </div>
   <div class="nav-right">
     <span class="updated-label" id="updated-label">Loading...</span>
-    <button class="btn-ghost" id="run-now-btn" onclick="runNow()" title="Trigger a fresh pipeline run on GitHub">
+    <button class="btn-subscribe" onclick="openSubscribeModal()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
+      Subscribe
+    </button>
+    <button class="btn-ghost admin-only" id="run-now-btn" onclick="runNow()" title="Trigger a fresh pipeline run on GitHub">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       Run now
+    </button>
+    <button class="btn-ghost admin-only" onclick="setCategory('settings')" title="Admin settings">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
     </button>
     <button class="btn-ghost" onclick="loadAll()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
@@ -481,7 +508,7 @@
     <div>
       <div class="sidebar-section-label">My searches</div>
       <div class="search-list" id="search-list"></div>
-      <button class="btn-add-search" onclick="openModal()">
+      <button class="btn-add-search admin-only" onclick="openModal()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Add search
       </button>
@@ -515,9 +542,31 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       <span>Picks</span>
     </div>
-    <div class="mobile-tab" data-cat="settings">
+    <div class="mobile-tab admin-only" data-cat="settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       <span>Settings</span>
+    </div>
+  </div>
+</div>
+
+<!-- Subscribe Modal (public) -->
+<div class="modal-overlay" id="subscribe-modal">
+  <div class="modal">
+    <h2>Get the top deals by email</h2>
+    <p style="font-size:13px;color:var(--text-muted);margin:-6px 0 16px;line-height:1.5">
+      We'll email you the top 5 biggest discounts every time we refresh. Unsubscribe anytime.
+    </p>
+    <div class="form-group">
+      <label>Email address</label>
+      <input type="email" id="sub-modal-email" placeholder="name@example.com">
+    </div>
+    <div class="form-group">
+      <label>Name (optional)</label>
+      <input type="text" id="sub-modal-name" placeholder="Your name">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeSubscribeModal()">Cancel</button>
+      <button class="btn-save" id="sub-modal-btn" onclick="submitSubscribe()">Subscribe</button>
     </div>
   </div>
 </div>
@@ -565,6 +614,20 @@
 
 <script>
   const BASE = '';
+  // Cloudflare Worker endpoint that persists public subscriptions to the repo.
+  // Set this to your deployed Worker URL (see worker/README.md).
+  const SUBSCRIBE_API = 'https://deals-subscribe.jbrasfield.workers.dev';
+
+  // Admin mode: client-side gate for management UI. Real protection is the PAT.
+  // Unlock by visiting <site>#admin ; lock with <site>#logout.
+  (function initAdmin() {
+    const h = (location.hash || '').toLowerCase();
+    if (h === '#admin') { localStorage.setItem('admin', '1'); history.replaceState(null, '', location.pathname); }
+    else if (h === '#logout') { localStorage.removeItem('admin'); history.replaceState(null, '', location.pathname); }
+    if (localStorage.getItem('admin') === '1') document.body.classList.add('admin');
+  })();
+  function isAdmin() { return localStorage.getItem('admin') === '1'; }
+
   let allDeals = [];
   let searchResults = [];
   let searchDefs = [];
@@ -656,6 +719,7 @@
     const container = document.getElementById('main-content');
 
     if (activeCategory === 'settings') {
+      if (!isAdmin()) { setCategory('all'); return; }
       container.innerHTML = renderSettings();
       return;
     }
@@ -676,10 +740,10 @@
         if (s) {
           html += `<div class="search-detail-head">
             <div class="section-title" style="margin:0">${esc(s.label)} — ${s.matches.length} match${s.matches.length !== 1 ? 'es' : ''}</div>
-            <div class="search-actions">
+            ${isAdmin() ? `<div class="search-actions">
               <button class="btn-mini" onclick="openModal('${s.id}')">Edit</button>
               <button class="btn-mini btn-mini-danger" onclick="deleteSearch('${s.id}')">Delete</button>
-            </div>
+            </div>` : ''}
           </div>`;
           if (def) html += renderSearchMeta(def);
           html += sortBar();
@@ -696,10 +760,10 @@
                 <div class="search-overview-label" onclick="selectSearch('${s.id}')">${esc(s.label)}
                   <span class="search-overview-count">${s.matches.length} match${s.matches.length !== 1 ? 'es' : ''}</span>
                 </div>
-                <div class="search-actions">
+                ${isAdmin() ? `<div class="search-actions">
                   <button class="btn-mini" onclick="openModal('${s.id}')">Edit</button>
                   <button class="btn-mini btn-mini-danger" onclick="deleteSearch('${s.id}')">Delete</button>
-                </div>
+                </div>` : ''}
               </div>`;
             html += renderDealList(sortDeals(s.matches).slice(0, 3));
             html += `</div>`;
@@ -793,6 +857,7 @@
 
     return `
       <div class="deal-card ${isSuggestion ? 'suggestion' : ''}">
+        ${deal.image_url ? `<img class="deal-thumb" src="${esc(deal.image_url)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
         <div style="flex:1">
           <div class="deal-meta">
             ${isSuggestion ? '<span class="badge badge-gold">&#9733; Top pick</span>' : ''}
@@ -1097,6 +1162,46 @@
       alert(`Failed to start run: ${e.message}`);
     } finally {
       if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+    }
+  }
+
+  // Public subscribe (writes via the Cloudflare Worker, no token in the browser)
+  function openSubscribeModal() {
+    document.getElementById('sub-modal-email').value = '';
+    document.getElementById('sub-modal-name').value = '';
+    document.getElementById('subscribe-modal').classList.add('open');
+  }
+  function closeSubscribeModal() { document.getElementById('subscribe-modal').classList.remove('open'); }
+  document.getElementById('subscribe-modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('subscribe-modal')) closeSubscribeModal();
+  });
+
+  async function submitSubscribe() {
+    const email = document.getElementById('sub-modal-email').value.trim();
+    const name = document.getElementById('sub-modal-name').value.trim();
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    const btn = document.getElementById('sub-modal-btn');
+    try {
+      btn.disabled = true; btn.textContent = 'Subscribing...';
+      const resp = await fetch(`${SUBSCRIBE_API}/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, name }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok) {
+        closeSubscribeModal();
+        alert(data.message || `You're subscribed! You'll get the top deals by email.`);
+      } else {
+        throw new Error(data.error || `HTTP ${resp.status}`);
+      }
+    } catch (e) {
+      alert(`Could not subscribe: ${e.message}`);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Subscribe';
     }
   }
 
