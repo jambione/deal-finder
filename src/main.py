@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from sources import slickdeals, reddit, amazon, retailers
+from sources import slickdeals, reddit, amazon, retailers, flights, games, software
 from scorer import score_deals
 from categorizer import assign_categories
 from matcher import match_searches
@@ -45,7 +45,7 @@ def main():
     print(f"[main] starting run at {now}")
 
     raw = []
-    for source_module in [slickdeals, reddit, amazon, retailers]:
+    for source_module in [slickdeals, reddit, amazon, retailers, flights, games, software]:
         try:
             fetched = source_module.fetch()
             print(f"[main] {source_module.__name__.split('.')[-1]}: {len(fetched)} deals")
@@ -73,7 +73,7 @@ def main():
     search_results = match_searches(all_deals, searches)
     suggestions = get_suggestions(scored, search_results)
 
-    for cat in ["electronics", "apparel", "travel"]:
+    for cat in ["electronics", "apparel", "travel", "games", "software"]:
         cat_deals = [d for d in scored if d.get("category") == cat]
         write_json(f"{cat}.json", {
             "category": cat,

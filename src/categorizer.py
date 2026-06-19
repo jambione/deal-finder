@@ -1,4 +1,16 @@
 KEYWORDS = {
+    "games": [
+        "steam", "xbox game", "playstation", "ps4", "ps5", "nintendo switch",
+        "pc game", "video game", "game deal", "epic games", "humble bundle",
+        "gog.com", "game pass", "gaming deal", "indie game", "rpg", "fps",
+        "simulation", "strategy game",
+    ],
+    "software": [
+        "software", "lifetime license", "lifetime deal", "saas deal", "app deal",
+        "plugin", "vpn deal", "antivirus", "password manager", "video editor",
+        "photo editor", "design tool", "productivity app", "subscription deal",
+        "license key", "office suite", "cloud storage deal",
+    ],
     "electronics": [
         "laptop", "macbook", "dell xps", "lenovo", "thinkpad", "chromebook",
         "tv", "4k", "oled", "monitor", "gpu", "cpu", "processor", "ram", "ssd",
@@ -35,9 +47,13 @@ def categorize(deal):
 
 
 def assign_categories(deals):
-    result = {"electronics": [], "apparel": [], "travel": [], "other": []}
+    result = {"electronics": [], "apparel": [], "travel": [], "games": [], "software": [], "other": []}
     for deal in deals:
-        cat = categorize(deal)
-        deal["category"] = cat
-        result[cat].append(deal)
+        existing_cat = deal.get("category")
+        if existing_cat and existing_cat in result:
+            result[existing_cat].append(deal)
+        else:
+            cat = categorize(deal)
+            deal["category"] = cat
+            result[cat].append(deal)
     return result

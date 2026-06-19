@@ -373,6 +373,8 @@
     <button class="pill" data-cat="electronics">Electronics</button>
     <button class="pill" data-cat="apparel">Apparel</button>
     <button class="pill" data-cat="travel">Travel</button>
+    <button class="pill" data-cat="games">Games</button>
+    <button class="pill" data-cat="software">Software</button>
     <button class="pill" data-cat="searches">My searches</button>
     <button class="pill" data-cat="suggestions">Picks</button>
   </div>
@@ -479,10 +481,12 @@
   async function loadAll() {
     document.getElementById('main-content').innerHTML = '<div class="loading">Loading deals...</div>';
     try {
-      const [elec, app, trav, srch, sugg] = await Promise.all([
+      const [elec, app, trav, gms, sw, srch, sugg] = await Promise.all([
         fetch(BASE + 'output/electronics.json').then(r => r.json()),
         fetch(BASE + 'output/apparel.json').then(r => r.json()),
         fetch(BASE + 'output/travel.json').then(r => r.json()),
+        fetch(BASE + 'output/games.json').then(r => r.json()),
+        fetch(BASE + 'output/software.json').then(r => r.json()),
         fetch(BASE + 'output/searches.json').then(r => r.json()),
         fetch(BASE + 'output/suggestions.json').then(r => r.json()),
       ]);
@@ -491,6 +495,8 @@
         ...(elec.deals || []),
         ...(app.deals || []),
         ...(trav.deals || []),
+        ...(gms.deals || []),
+        ...(sw.deals || []),
       ];
       searchResults = srch.results || [];
       suggestions = sugg.suggestions || [];
