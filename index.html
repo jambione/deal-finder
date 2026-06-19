@@ -508,7 +508,7 @@
     <div>
       <div class="sidebar-section-label">My searches</div>
       <div class="search-list" id="search-list"></div>
-      <button class="btn-add-search admin-only" onclick="openModal()">
+      <button class="btn-add-search" onclick="openModal()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Add search
       </button>
@@ -649,7 +649,7 @@
         fetch(BASE + 'output/software.json').then(r => r.json()),
         fetch(BASE + 'output/searches.json').then(r => r.json()),
         fetch(BASE + 'output/suggestions.json').then(r => r.json()),
-        fetch(BASE + 'config/searches.json').then(r => r.json()).catch(() => ({ searches: [] })),
+        Promise.resolve({ searches: loadLocalSearches() }),
         fetch(BASE + 'config/subscribers.json').then(r => r.json()).catch(() => ({ subscribers: [] })),
       ]);
 
@@ -740,10 +740,10 @@
         if (s) {
           html += `<div class="search-detail-head">
             <div class="section-title" style="margin:0">${esc(s.label)} — ${s.matches.length} match${s.matches.length !== 1 ? 'es' : ''}</div>
-            ${isAdmin() ? `<div class="search-actions">
+            <div class="search-actions">
               <button class="btn-mini" onclick="openModal('${s.id}')">Edit</button>
               <button class="btn-mini btn-mini-danger" onclick="deleteSearch('${s.id}')">Delete</button>
-            </div>` : ''}
+            </div>
           </div>`;
           if (def) html += renderSearchMeta(def);
           html += sortBar();
@@ -760,10 +760,10 @@
                 <div class="search-overview-label" onclick="selectSearch('${s.id}')">${esc(s.label)}
                   <span class="search-overview-count">${s.matches.length} match${s.matches.length !== 1 ? 'es' : ''}</span>
                 </div>
-                ${isAdmin() ? `<div class="search-actions">
+                <div class="search-actions">
                   <button class="btn-mini" onclick="openModal('${s.id}')">Edit</button>
                   <button class="btn-mini btn-mini-danger" onclick="deleteSearch('${s.id}')">Delete</button>
-                </div>` : ''}
+                </div>
               </div>`;
             html += renderDealList(sortDeals(s.matches).slice(0, 3));
             html += `</div>`;
@@ -987,45 +987,22 @@
   function closeModal() { document.getElementById('modal').classList.remove('open'); }
   document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
 
-  // Generic CRUD writer: reads config/searches.json, applies mutator(searches)->searches, commits.
-  async function writeSearches(mutator, message) {
-    const pat = localStorage.getItem('gh_pat');
-    if (!pat) {
-      alert('Enter your GitHub PAT in Settings to manage searches.');
-      closeModal();
-      setCategory('settings');
-      return false;
-    }
-    const owner = 'jambione', repo = 'deal-finder', path = 'config/searches.json';
-    try {
-      const fileResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' }
-      });
-      if (!fileResp.ok) throw new Error(`read failed (${fileResp.status})`);
-      const fileData = await fileResp.json();
-      const current = JSON.parse(atob(fileData.content.replace(/\n/g, '')));
-      current.searches = mutator([...(current.searches || [])]);
-
-      const putResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-        method: 'PUT',
-        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message,
-          content: btoa(JSON.stringify(current, null, 2)),
-          sha: fileData.sha,
-        }),
-      });
-      if (!putResp.ok) throw new Error(`write failed (${putResp.status})`);
-      // Reflect locally so the UI updates immediately (matches refresh on next run).
-      searchDefs = current.searches;
-      return true;
-    } catch (e) {
-      alert(`Failed: ${e.message}`);
-      return false;
-    }
+  // Searches live in localStorage — no PAT or GitHub API needed.
+  const LS_SEARCHES = 'bd_searches';
+  function loadLocalSearches() {
+    try { return JSON.parse(localStorage.getItem(LS_SEARCHES) || '[]'); } catch { return []; }
+  }
+  function saveLocalSearches(searches) {
+    localStorage.setItem(LS_SEARCHES, JSON.stringify(searches));
+    searchDefs = searches;
+  }
+  function writeSearches(mutator) {
+    const updated = mutator([...loadLocalSearches()]);
+    saveLocalSearches(updated);
+    return true;
   }
 
-  async function saveSearch() {
+  function saveSearch() {
     const editingId = document.getElementById('f-editing-id').value;
     const label = document.getElementById('f-label').value.trim();
     const category = document.getElementById('f-category').value;
@@ -1041,19 +1018,15 @@
     const id = editingId || label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const search = { id, label, category, keywords, max_price: maxPrice, min_discount_pct: minDiscount };
 
-    const ok = await writeSearches(searches => {
+    writeSearches(searches => {
       const i = searches.findIndex(s => s.id === id);
       if (i >= 0) searches[i] = search; else searches.push(search);
       return searches;
-    }, editingId ? `chore: update search "${label}"` : `feat: add search "${label}"`);
-
-    if (ok) {
-      closeModal();
-      alert(`Search "${label}" ${editingId ? 'updated' : 'saved'}. Matches refresh on the next pipeline run.`);
-      if (activeSearchId === id || !editingId) activeSearchId = id;
-      renderSearchList();
-      renderMain();
-    }
+    });
+    closeModal();
+    if (activeSearchId === id || !editingId) activeSearchId = id;
+    renderSearchList();
+    renderMain();
   }
 
   async function deleteSearch(id) {
@@ -1061,8 +1034,8 @@
     const label = def ? def.label : id;
     if (!confirm(`Delete search "${label}"? This can't be undone.`)) return;
 
-    const ok = await writeSearches(searches => searches.filter(s => s.id !== id), `chore: delete search "${label}"`);
-    if (ok) {
+    writeSearches(searches => searches.filter(s => s.id !== id));
+    {
       searchResults = searchResults.filter(r => r.search_id !== id);
       if (activeSearchId === id) activeSearchId = null;
       renderSearchList();
