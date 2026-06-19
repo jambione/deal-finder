@@ -113,6 +113,29 @@
     }
     .btn-ghost:hover { background: rgba(255,255,255,0.1); }
 
+    .sort-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .sort-bar label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+    .sort-select {
+      font-size: 12px;
+      padding: 5px 28px 5px 10px;
+      border: 0.5px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+    }
+    .sort-select:focus { outline: none; border-color: var(--gold); }
+
     /* LAYOUT */
     .layout {
       display: flex;
@@ -409,6 +432,7 @@
   <main id="main-content">
     <div class="loading">Loading deals...</div>
   </main>
+  <div id="sort-bar-portal"></div>
 </div>
 
 <div class="mobile-bottom-nav">
@@ -477,6 +501,7 @@
   let suggestions = [];
   let activeCategory = 'all';
   let activeSearchId = null;
+  let activeSort = 'score';
 
   async function loadAll() {
     document.getElementById('main-content').innerHTML = '<div class="loading">Loading deals...</div>';
@@ -551,7 +576,7 @@
     let html = '';
 
     if (activeCategory === 'suggestions') {
-      html += renderSuggestions(suggestions);
+      html += renderSuggestions(sortDeals(suggestions));
       container.innerHTML = html;
       return;
     }
@@ -561,12 +586,13 @@
         const result = searchResults.find(r => r.search_id === activeSearchId);
         if (result) {
           html += `<div class="section-title">${result.label} — ${result.matches.length} match${result.matches.length !== 1 ? 'es' : ''}</div>`;
-          html += renderDealList(result.matches);
+          html += sortBar();
+          html += renderDealList(sortDeals(result.matches));
         }
       } else {
         searchResults.forEach(r => {
           html += `<div class="section-title">${r.label}</div>`;
-          html += renderDealList(r.matches.slice(0, 3));
+          html += renderDealList(sortDeals(r.matches).slice(0, 3));
         });
         if (searchResults.length === 0) {
           html = '<div class="empty">No searches yet. Add one to get started.</div>';
@@ -587,12 +613,41 @@
 
     if (filtered.length > 0) {
       html += `<div class="section-title">${activeCategory === 'all' ? 'All deals' : cap(activeCategory) + ' deals'}</div>`;
-      html += renderDealList(filtered.slice(0, 30));
+      html += sortBar();
+      html += renderDealList(sortDeals(filtered).slice(0, 30));
     } else {
       html += '<div class="empty">No deals found. Try refreshing.</div>';
     }
 
     container.innerHTML = html;
+  }
+
+  function sortDeals(deals) {
+    const d = [...deals];
+    switch (activeSort) {
+      case 'discount': return d.sort((a,b) => (b.discount_pct||0) - (a.discount_pct||0));
+      case 'recent':   return d.sort((a,b) => new Date(b.posted_at) - new Date(a.posted_at));
+      case 'price_asc': return d.filter(x=>x.price!=null).sort((a,b)=>a.price-b.price)
+                               .concat(d.filter(x=>x.price==null));
+      case 'price_desc': return d.filter(x=>x.price!=null).sort((a,b)=>b.price-a.price)
+                                .concat(d.filter(x=>x.price==null));
+      case 'votes':    return d.sort((a,b) => (b.votes||0) - (a.votes||0));
+      default:         return d.sort((a,b) => (b.score||0) - (a.score||0));
+    }
+  }
+
+  function sortBar() {
+    return `<div class="sort-bar">
+      <label for="sort-select">Sort by</label>
+      <select class="sort-select" id="sort-select" onchange="activeSort=this.value;renderMain()">
+        <option value="score"    ${activeSort==='score'    ?'selected':''}>Best score</option>
+        <option value="discount" ${activeSort==='discount' ?'selected':''}>Greatest discount</option>
+        <option value="recent"   ${activeSort==='recent'   ?'selected':''}>Most recent</option>
+        <option value="votes"    ${activeSort==='votes'    ?'selected':''}>Most upvoted</option>
+        <option value="price_asc"  ${activeSort==='price_asc'  ?'selected':''}>Price: low to high</option>
+        <option value="price_desc" ${activeSort==='price_desc' ?'selected':''}>Price: high to low</option>
+      </select>
+    </div>`;
   }
 
   function renderDealList(deals, isSuggestion = false) {
