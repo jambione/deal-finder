@@ -680,7 +680,7 @@
         <div class="deal-right">
           ${price ? `<div class="deal-price">${price}</div>` : ''}
           ${orig ? `<div class="deal-orig">${orig}</div>` : ''}
-          ${deal.url ? `<a href="${esc(deal.url)}" target="_blank" rel="noopener" class="deal-link">View ↗</a>` : ''}
+          ${deal.url ? `<a href="${esc(deal.url)}" target="_blank" rel="noopener" class="deal-link">${esc(source)} ↗</a>` : ''}
         </div>
       </div>
     `;
