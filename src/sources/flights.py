@@ -5,8 +5,13 @@ from dateutil import parser as dateparser
 
 FEEDS = [
     ("https://www.theflightdeal.com/feed/", "theflightdeal"),
-    ("https://www.secretflying.com/usa-deals/feed/", "secretflying"),
-    ("https://airfarewatchdog.com/blog/feed/", "airfarewatchdog"),
+    ("https://www.secretflying.com/feed/", "secretflying"),
+    ("https://www.airfarewatchdog.com/blog/feed/", "airfarewatchdog"),
+    ("https://www.travelzoo.com/rss/", "travelzoo"),
+    ("https://www.travelpirates.com/feed", "travelpirates"),
+    ("https://thepointsguy.com/feed/", "thepointsguy"),
+    ("https://www.reddit.com/r/TravelDeals/hot.rss?limit=50", "r/traveldeals"),
+    ("https://www.reddit.com/r/flightdeals/hot.rss?limit=50", "r/flightdeals"),
 ]
 
 HEADERS = {

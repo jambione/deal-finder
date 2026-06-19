@@ -29,6 +29,8 @@ jobs:
           BESTBUY_API_KEY: ${{ secrets.BESTBUY_API_KEY }}
           WALMART_API_KEY: ${{ secrets.WALMART_API_KEY }}
           NEWEGG_API_KEY: ${{ secrets.NEWEGG_API_KEY }}
+          AMADEUS_API_KEY: ${{ secrets.AMADEUS_API_KEY }}
+          AMADEUS_API_SECRET: ${{ secrets.AMADEUS_API_SECRET }}
         run: python src/main.py
 
       - name: Commit updated deals
@@ -38,3 +40,12 @@ jobs:
           git add output/
           git diff --staged --quiet || git commit -m "chore: refresh deals [skip ci]"
           git push
+
+      - name: Email top 5 deals to subscribers
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+        run: python src/notify.py
