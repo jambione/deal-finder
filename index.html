@@ -135,6 +135,19 @@
       background-position: right 8px center;
     }
     .sort-select:focus { outline: none; border-color: var(--gold); }
+    .filter-input {
+      flex: 1;
+      min-width: 120px;
+      max-width: 280px;
+      font-size: 12px;
+      padding: 5px 12px;
+      border: 0.5px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      color: var(--text);
+    }
+    .filter-input:focus { outline: none; border-color: var(--gold); }
+    .filter-input::placeholder { color: var(--text-muted); }
 
     /* LAYOUT */
     .layout {
@@ -502,6 +515,7 @@
   let activeCategory = 'all';
   let activeSearchId = null;
   let activeSort = 'score';
+  let filterText = '';
 
   async function loadAll() {
     document.getElementById('main-content').innerHTML = '<div class="loading">Loading deals...</div>';
@@ -587,7 +601,7 @@
         if (result) {
           html += `<div class="section-title">${result.label} — ${result.matches.length} match${result.matches.length !== 1 ? 'es' : ''}</div>`;
           html += sortBar();
-          html += renderDealList(sortDeals(result.matches));
+          html += renderDealList(sortDeals(filterDeals(result.matches)));
         }
       } else {
         searchResults.forEach(r => {
@@ -614,12 +628,29 @@
     if (filtered.length > 0) {
       html += `<div class="section-title">${activeCategory === 'all' ? 'All deals' : cap(activeCategory) + ' deals'}</div>`;
       html += sortBar();
-      html += renderDealList(sortDeals(filtered).slice(0, 30));
+      const shown = sortDeals(filterDeals(filtered));
+      html += renderDealList(shown.slice(0, 30));
     } else {
       html += '<div class="empty">No deals found. Try refreshing.</div>';
     }
 
     container.innerHTML = html;
+  }
+
+  function filterDeals(deals) {
+    const q = filterText.trim().toLowerCase();
+    if (!q) return deals;
+    return deals.filter(d =>
+      (d.title || '').toLowerCase().includes(q) ||
+      (d.source || '').toLowerCase().includes(q)
+    );
+  }
+
+  function onFilterInput(v) {
+    filterText = v;
+    renderMain();
+    const el = document.getElementById('filter-input');
+    if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
   }
 
   function sortDeals(deals) {
@@ -638,6 +669,8 @@
 
   function sortBar() {
     return `<div class="sort-bar">
+      <input type="text" class="filter-input" id="filter-input" placeholder="Filter deals..."
+             value="${filterText.replace(/"/g, '&quot;')}" oninput="onFilterInput(this.value)">
       <label for="sort-select">Sort by</label>
       <select class="sort-select" id="sort-select" onchange="activeSort=this.value;renderMain()">
         <option value="score"    ${activeSort==='score'    ?'selected':''}>Best score</option>
