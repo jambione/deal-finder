@@ -189,6 +189,30 @@
     .search-item-label { font-size: 13px; color: #fff; font-weight: 500; }
     .search-item-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
 
+    /* CRUD controls */
+    .search-detail-head, .search-overview-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 10px;
+    }
+    .search-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .btn-mini {
+      font-size: 12px; padding: 4px 12px; border-radius: 16px;
+      border: 0.5px solid var(--border); background: var(--surface);
+      color: var(--text); cursor: pointer;
+    }
+    .btn-mini:hover { border-color: var(--gold); }
+    .btn-mini-danger { color: #c0392b; }
+    .btn-mini-danger:hover { border-color: #c0392b; background: rgba(192,57,43,0.06); }
+    .search-overview { margin-bottom: 22px; }
+    .search-overview-label { font-size: 15px; font-weight: 600; color: var(--text); cursor: pointer; }
+    .search-overview-label:hover { color: var(--gold); }
+    .search-overview-count { font-size: 12px; font-weight: 400; color: var(--text-muted); margin-left: 8px; }
+    .search-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .meta-chip {
+      font-size: 11px; padding: 3px 10px; border-radius: 12px;
+      background: var(--surface); border: 0.5px solid var(--border); color: var(--text-muted);
+    }
+
     .btn-add-search {
       width: 100%;
       font-size: 12px;
@@ -472,7 +496,7 @@
 <!-- Add Search Modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
-    <h2>Add a search</h2>
+    <h2 id="modal-title">Add a search</h2>
     <div class="pat-notice" id="pat-notice" style="display:none">
       To save searches back to the repo, enter your GitHub Personal Access Token in Settings first.
     </div>
@@ -486,6 +510,8 @@
         <option value="travel">Travel</option>
         <option value="electronics">Electronics</option>
         <option value="apparel">Apparel</option>
+        <option value="games">Games</option>
+        <option value="software">Software</option>
       </select>
     </div>
     <div class="form-group">
@@ -502,8 +528,9 @@
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" onclick="saveSearch()">Save search</button>
+      <button class="btn-save" id="modal-save-btn" onclick="saveSearch()">Save search</button>
     </div>
+    <input type="hidden" id="f-editing-id" value="">
   </div>
 </div>
 
@@ -511,6 +538,7 @@
   const BASE = '';
   let allDeals = [];
   let searchResults = [];
+  let searchDefs = [];
   let suggestions = [];
   let activeCategory = 'all';
   let activeSearchId = null;
@@ -520,7 +548,7 @@
   async function loadAll() {
     document.getElementById('main-content').innerHTML = '<div class="loading">Loading deals...</div>';
     try {
-      const [elec, app, trav, gms, sw, srch, sugg] = await Promise.all([
+      const [elec, app, trav, gms, sw, srch, sugg, defs] = await Promise.all([
         fetch(BASE + 'output/electronics.json').then(r => r.json()),
         fetch(BASE + 'output/apparel.json').then(r => r.json()),
         fetch(BASE + 'output/travel.json').then(r => r.json()),
@@ -528,6 +556,7 @@
         fetch(BASE + 'output/software.json').then(r => r.json()),
         fetch(BASE + 'output/searches.json').then(r => r.json()),
         fetch(BASE + 'output/suggestions.json').then(r => r.json()),
+        fetch(BASE + 'config/searches.json').then(r => r.json()).catch(() => ({ searches: [] })),
       ]);
 
       allDeals = [
@@ -538,6 +567,7 @@
         ...(sw.deals || []),
       ];
       searchResults = srch.results || [];
+      searchDefs = defs.searches || [];
       suggestions = sugg.suggestions || [];
 
       const latestDate = elec.generated_at || app.generated_at || trav.generated_at;
@@ -558,12 +588,23 @@
     }
   }
 
+  function searchList() {
+    // Prefer the editable definitions; fall back to pipeline results.
+    if (searchDefs.length) {
+      return searchDefs.map(def => {
+        const res = searchResults.find(r => r.search_id === def.id);
+        return { id: def.id, label: def.label, matches: res ? res.matches : [] };
+      });
+    }
+    return searchResults.map(r => ({ id: r.search_id, label: r.label, matches: r.matches }));
+  }
+
   function renderSearchList() {
     const list = document.getElementById('search-list');
-    list.innerHTML = searchResults.map(r => `
-      <div class="search-item ${activeSearchId === r.search_id ? 'active' : ''}" onclick="selectSearch('${r.search_id}')">
-        <div class="search-item-label">${r.label}</div>
-        <div class="search-item-sub">${r.matches.length} match${r.matches.length !== 1 ? 'es' : ''}</div>
+    list.innerHTML = searchList().map(s => `
+      <div class="search-item ${activeSearchId === s.id ? 'active' : ''}" onclick="selectSearch('${s.id}')">
+        <div class="search-item-label">${esc(s.label)}</div>
+        <div class="search-item-sub">${s.matches.length} match${s.matches.length !== 1 ? 'es' : ''}</div>
       </div>
     `).join('');
   }
@@ -596,20 +637,41 @@
     }
 
     if (activeCategory === 'searches') {
+      const list = searchList();
       if (activeSearchId) {
-        const result = searchResults.find(r => r.search_id === activeSearchId);
-        if (result) {
-          html += `<div class="section-title">${result.label} — ${result.matches.length} match${result.matches.length !== 1 ? 'es' : ''}</div>`;
+        const s = list.find(x => x.id === activeSearchId);
+        const def = searchDefs.find(d => d.id === activeSearchId);
+        if (s) {
+          html += `<div class="search-detail-head">
+            <div class="section-title" style="margin:0">${esc(s.label)} — ${s.matches.length} match${s.matches.length !== 1 ? 'es' : ''}</div>
+            <div class="search-actions">
+              <button class="btn-mini" onclick="openModal('${s.id}')">Edit</button>
+              <button class="btn-mini btn-mini-danger" onclick="deleteSearch('${s.id}')">Delete</button>
+            </div>
+          </div>`;
+          if (def) html += renderSearchMeta(def);
           html += sortBar();
-          html += renderDealList(sortDeals(filterDeals(result.matches)));
+          html += renderDealList(sortDeals(filterDeals(s.matches)));
         }
       } else {
-        searchResults.forEach(r => {
-          html += `<div class="section-title">${r.label}</div>`;
-          html += renderDealList(sortDeals(r.matches).slice(0, 3));
-        });
-        if (searchResults.length === 0) {
+        if (list.length === 0) {
           html = '<div class="empty">No searches yet. Add one to get started.</div>';
+        } else {
+          html += `<div class="section-title">My searches</div>`;
+          list.forEach(s => {
+            html += `<div class="search-overview">
+              <div class="search-overview-head">
+                <div class="search-overview-label" onclick="selectSearch('${s.id}')">${esc(s.label)}
+                  <span class="search-overview-count">${s.matches.length} match${s.matches.length !== 1 ? 'es' : ''}</span>
+                </div>
+                <div class="search-actions">
+                  <button class="btn-mini" onclick="openModal('${s.id}')">Edit</button>
+                  <button class="btn-mini btn-mini-danger" onclick="deleteSearch('${s.id}')">Delete</button>
+                </div>
+              </div>`;
+            html += renderDealList(sortDeals(s.matches).slice(0, 3));
+            html += `</div>`;
+          });
         }
       }
       container.innerHTML = html;
@@ -773,15 +835,75 @@
   document.querySelectorAll('.pill').forEach(p => p.addEventListener('click', () => setCategory(p.dataset.cat)));
   document.querySelectorAll('.mobile-tab').forEach(t => t.addEventListener('click', () => setCategory(t.dataset.cat)));
 
-  function openModal() {
+  function renderSearchMeta(def) {
+    const parts = [];
+    parts.push(`<span class="meta-chip">${esc(cap(def.category || 'any'))}</span>`);
+    if (def.keywords && def.keywords.length) parts.push(`<span class="meta-chip">${def.keywords.map(esc).join(', ')}</span>`);
+    if (def.max_price) parts.push(`<span class="meta-chip">≤ $${Number(def.max_price).toLocaleString()}</span>`);
+    if (def.min_discount_pct) parts.push(`<span class="meta-chip">≥ ${def.min_discount_pct}% off</span>`);
+    return `<div class="search-meta">${parts.join('')}</div>`;
+  }
+
+  function openModal(id) {
     const pat = localStorage.getItem('gh_pat');
     document.getElementById('pat-notice').style.display = pat ? 'none' : 'block';
+
+    const editing = id ? searchDefs.find(d => d.id === id) : null;
+    document.getElementById('f-editing-id').value = editing ? editing.id : '';
+    document.getElementById('modal-title').textContent = editing ? 'Edit search' : 'Add a search';
+    document.getElementById('modal-save-btn').textContent = editing ? 'Update search' : 'Save search';
+
+    document.getElementById('f-label').value = editing ? editing.label : '';
+    document.getElementById('f-category').value = editing ? (editing.category || 'travel') : 'travel';
+    document.getElementById('f-keywords').value = editing ? (editing.keywords || []).join(', ') : '';
+    document.getElementById('f-maxprice').value = editing && editing.max_price != null ? editing.max_price : '';
+    document.getElementById('f-mindiscount').value = editing && editing.min_discount_pct != null ? editing.min_discount_pct : '';
+
     document.getElementById('modal').classList.add('open');
   }
   function closeModal() { document.getElementById('modal').classList.remove('open'); }
   document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
 
+  // Generic CRUD writer: reads config/searches.json, applies mutator(searches)->searches, commits.
+  async function writeSearches(mutator, message) {
+    const pat = localStorage.getItem('gh_pat');
+    if (!pat) {
+      alert('Enter your GitHub PAT in Settings to manage searches.');
+      closeModal();
+      setCategory('settings');
+      return false;
+    }
+    const owner = 'jambione', repo = 'deal-finder', path = 'config/searches.json';
+    try {
+      const fileResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' }
+      });
+      if (!fileResp.ok) throw new Error(`read failed (${fileResp.status})`);
+      const fileData = await fileResp.json();
+      const current = JSON.parse(atob(fileData.content.replace(/\n/g, '')));
+      current.searches = mutator([...(current.searches || [])]);
+
+      const putResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message,
+          content: btoa(JSON.stringify(current, null, 2)),
+          sha: fileData.sha,
+        }),
+      });
+      if (!putResp.ok) throw new Error(`write failed (${putResp.status})`);
+      // Reflect locally so the UI updates immediately (matches refresh on next run).
+      searchDefs = current.searches;
+      return true;
+    } catch (e) {
+      alert(`Failed: ${e.message}`);
+      return false;
+    }
+  }
+
   async function saveSearch() {
+    const editingId = document.getElementById('f-editing-id').value;
     const label = document.getElementById('f-label').value.trim();
     const category = document.getElementById('f-category').value;
     const keywords = document.getElementById('f-keywords').value.split(',').map(k => k.trim()).filter(Boolean);
@@ -793,49 +915,35 @@
       return;
     }
 
-    const newSearch = {
-      id: label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-      label,
-      category,
-      keywords,
-      max_price: maxPrice,
-      min_discount_pct: minDiscount,
-    };
+    const id = editingId || label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const search = { id, label, category, keywords, max_price: maxPrice, min_discount_pct: minDiscount };
 
-    const pat = localStorage.getItem('gh_pat');
-    if (!pat) {
-      alert('Enter your GitHub PAT in Settings to save searches.');
+    const ok = await writeSearches(searches => {
+      const i = searches.findIndex(s => s.id === id);
+      if (i >= 0) searches[i] = search; else searches.push(search);
+      return searches;
+    }, editingId ? `chore: update search "${label}"` : `feat: add search "${label}"`);
+
+    if (ok) {
       closeModal();
-      setCategory('settings');
-      return;
+      alert(`Search "${label}" ${editingId ? 'updated' : 'saved'}. Matches refresh on the next pipeline run.`);
+      if (activeSearchId === id || !editingId) activeSearchId = id;
+      renderSearchList();
+      renderMain();
     }
+  }
 
-    try {
-      const owner = 'jambione';
-      const repo = 'deal-finder';
-      const path = 'config/searches.json';
+  async function deleteSearch(id) {
+    const def = searchDefs.find(d => d.id === id);
+    const label = def ? def.label : id;
+    if (!confirm(`Delete search "${label}"? This can't be undone.`)) return;
 
-      const fileResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' }
-      });
-      const fileData = await fileResp.json();
-      const current = JSON.parse(atob(fileData.content.replace(/\n/g, '')));
-      current.searches.push(newSearch);
-
-      await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-        method: 'PUT',
-        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `feat: add search "${label}"`,
-          content: btoa(JSON.stringify(current, null, 2)),
-          sha: fileData.sha,
-        }),
-      });
-
-      alert(`Search "${label}" saved. It will take effect on the next pipeline run.`);
-      closeModal();
-    } catch(e) {
-      alert(`Failed to save: ${e.message}`);
+    const ok = await writeSearches(searches => searches.filter(s => s.id !== id), `chore: delete search "${label}"`);
+    if (ok) {
+      searchResults = searchResults.filter(r => r.search_id !== id);
+      if (activeSearchId === id) activeSearchId = null;
+      renderSearchList();
+      renderMain();
     }
   }
 
