@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-06-19T14:06:02.042284+00:00",
+  "results": [
+    {
+      "search_id": "italy-flights",
+      "label": "Flights to Italy",
+      "matches": []
+    },
+    {
+      "search_id": "laptops-under-800",
+      "label": "Laptops under $800",
+      "matches": []
+    },
+    {
+      "search_id": "running-shoes",
+      "label": "Running shoes",
+      "matches": []
+    }
+  ]
+}

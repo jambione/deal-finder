@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brasfield Deals</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1B2438;
+      --navy-dark: #131929;
+      --navy-light: rgba(255,255,255,0.08);
+      --gold: #C9A44A;
+      --gold-muted: rgba(201,164,74,0.18);
+      --gold-border: rgba(201,164,74,0.45);
+      --green-bg: #EAF3DE;
+      --green-text: #27500A;
+      --bg: #f5f5f3;
+      --surface: #ffffff;
+      --text: #1a1a1a;
+      --text-muted: #666;
+      --border: rgba(0,0,0,0.1);
+      --radius: 10px;
+      --radius-lg: 14px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1520;
+        --surface: #1a2235;
+        --text: #f0f0ee;
+        --text-muted: #8a9bb0;
+        --border: rgba(255,255,255,0.1);
+        --green-bg: #1a2e10;
+        --green-text: #7ec85a;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--navy);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo img { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; }
+    .logo-text { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; }
+    .logo-text span { color: var(--gold); }
+
+    .nav-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      flex: 1;
+    }
+    .nav-pills::-webkit-scrollbar { display: none; }
+
+    .pill {
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 0.5px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: rgba(255,255,255,0.65);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+    .pill:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .pill.active { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 600; }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .updated-label { font-size: 11px; color: rgba(255,255,255,0.35); white-space: nowrap; }
+    .btn-ghost {
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 0.5px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+    /* LAYOUT */
+    .layout {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: calc(100vh - 56px);
+    }
+
+    /* SIDEBAR */
+    aside {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--navy);
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-section-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .search-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .search-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .search-item:hover { background: rgba(255,255,255,0.06); }
+    .search-item.active { background: var(--gold-muted); }
+    .search-item-label { font-size: 13px; color: #fff; font-weight: 500; }
+    .search-item-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+    .btn-add-search {
+      width: 100%;
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 0.5px solid var(--gold-border);
+      background: var(--gold-muted);
+      color: var(--gold);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 6px;
+      transition: background 0.15s;
+    }
+    .btn-add-search:hover { background: rgba(201,164,74,0.28); }
+
+    .stat-grid { display: flex; flex-direction: column; gap: 6px; }
+    .stat-card {
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .stat-label { font-size: 11px; color: rgba(255,255,255,0.4); }
+    .stat-val { font-size: 18px; font-weight: 600; color: #fff; margin-top: 1px; }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      padding: 24px 24px;
+      overflow-y: auto;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    /* DEAL CARDS */
+    .deals-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+
+    .deal-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      transition: border-color 0.15s;
+    }
+    .deal-card:hover { border-color: rgba(0,0,0,0.2); }
+    .deal-card.suggestion { border: 2px solid var(--gold); }
+
+    .deal-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 5px; }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .badge-gold { background: var(--gold); color: var(--navy); }
+    .badge-green { background: var(--green-bg); color: var(--green-text); }
+    .badge-source { background: transparent; border: 0.5px solid var(--border); color: var(--text-muted); font-weight: 400; }
+
+    .deal-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .deal-sub { font-size: 12px; color: var(--text-muted); }
+    .deal-why { font-size: 12px; color: var(--gold); margin-top: 5px; }
+
+    .deal-right { text-align: right; flex-shrink: 0; }
+    .deal-price { font-size: 18px; font-weight: 700; color: var(--text); }
+    .deal-orig { font-size: 12px; color: var(--text-muted); text-decoration: line-through; margin-top: 1px; }
+    .deal-link {
+      font-size: 12px;
+      color: var(--gold);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      margin-top: 6px;
+    }
+    .deal-link:hover { text-decoration: underline; }
+
+    /* EMPTY STATE */
+    .empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      width: 100%;
+      max-width: 420px;
+      margin: 16px;
+    }
+    .modal h2 { font-size: 17px; font-weight: 600; margin-bottom: 16px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px; }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+    .btn-cancel {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 0.5px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .btn-save {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      background: var(--navy);
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .btn-save:hover { background: var(--gold); color: var(--navy); }
+
+    /* PAT NOTICE */
+    .pat-notice {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 14px;
+    }
+
+    /* MOBILE */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--navy);
+      padding: 10px 0 16px;
+      z-index: 100;
+    }
+    .mobile-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .mobile-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .mobile-tab svg { width: 22px; height: 22px; }
+    .mobile-tab span { font-size: 10px; color: rgba(255,255,255,0.4); }
+    .mobile-tab.active svg path, .mobile-tab.active svg rect,
+    .mobile-tab.active svg polyline, .mobile-tab.active svg line,
+    .mobile-tab.active svg circle { stroke: var(--gold); }
+    .mobile-tab.active span { color: var(--gold); }
+
+    /* Loading spinner */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 14px; }
+      .updated-label { display: none; }
+      .nav-right .btn-ghost { display: none; }
+      aside { display: none; }
+      main { padding: 16px 14px 80px; }
+      .mobile-bottom-nav { display: block; }
+      .layout { display: block; }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-bottom-nav { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <img src="assets/brasfield-logo.png" alt="Brasfield logo">
+    <span class="logo-text">Brasfield <span>Deals</span></span>
+  </a>
+  <div class="nav-pills">
+    <button class="pill active" data-cat="all">All</button>
+    <button class="pill" data-cat="electronics">Electronics</button>
+    <button class="pill" data-cat="apparel">Apparel</button>
+    <button class="pill" data-cat="travel">Travel</button>
+    <button class="pill" data-cat="searches">My searches</button>
+    <button class="pill" data-cat="suggestions">Picks</button>
+  </div>
+  <div class="nav-right">
+    <span class="updated-label" id="updated-label">Loading...</span>
+    <button class="btn-ghost" onclick="loadAll()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      Refresh
+    </button>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside id="sidebar">
+    <div>
+      <div class="sidebar-section-label">My searches</div>
+      <div class="search-list" id="search-list"></div>
+      <button class="btn-add-search" onclick="openModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add search
+      </button>
+    </div>
+    <div>
+      <div class="sidebar-section-label">Stats</div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-label">Total deals</div><div class="stat-val" id="stat-total">—</div></div>
+        <div class="stat-card"><div class="stat-label">Suggestions</div><div class="stat-val" id="stat-suggestions">—</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main id="main-content">
+    <div class="loading">Loading deals...</div>
+  </main>
+</div>
+
+<div class="mobile-bottom-nav">
+  <div class="mobile-tabs">
+    <div class="mobile-tab active" data-cat="all">
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </div>
+    <div class="mobile-tab" data-cat="searches">
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Searches</span>
+    </div>
+    <div class="mobile-tab" data-cat="suggestions">
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>Picks</span>
+    </div>
+    <div class="mobile-tab" data-cat="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Settings</span>
+    </div>
+  </div>
+</div>
+
+<!-- Add Search Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>Add a search</h2>
+    <div class="pat-notice" id="pat-notice" style="display:none">
+      To save searches back to the repo, enter your GitHub Personal Access Token in Settings first.
+    </div>
+    <div class="form-group">
+      <label>Label</label>
+      <input type="text" id="f-label" placeholder="Flights to Italy">
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <select id="f-category">
+        <option value="travel">Travel</option>
+        <option value="electronics">Electronics</option>
+        <option value="apparel">Apparel</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Keywords (comma-separated)</label>
+      <input type="text" id="f-keywords" placeholder="italy, rome, milan">
+    </div>
+    <div class="form-group">
+      <label>Max price ($)</label>
+      <input type="number" id="f-maxprice" placeholder="5000">
+    </div>
+    <div class="form-group">
+      <label>Min discount (%)</label>
+      <input type="number" id="f-mindiscount" placeholder="0">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveSearch()">Save search</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const BASE = '';
+  let allDeals = [];
+  let searchResults = [];
+  let suggestions = [];
+  let activeCategory = 'all';
+  let activeSearchId = null;
+
+  async function loadAll() {
+    document.getElementById('main-content').innerHTML = '<div class="loading">Loading deals...</div>';
+    try {
+      const [elec, app, trav, srch, sugg] = await Promise.all([
+        fetch(BASE + 'output/electronics.json').then(r => r.json()),
+        fetch(BASE + 'output/apparel.json').then(r => r.json()),
+        fetch(BASE + 'output/travel.json').then(r => r.json()),
+        fetch(BASE + 'output/searches.json').then(r => r.json()),
+        fetch(BASE + 'output/suggestions.json').then(r => r.json()),
+      ]);
+
+      allDeals = [
+        ...(elec.deals || []),
+        ...(app.deals || []),
+        ...(trav.deals || []),
+      ];
+      searchResults = srch.results || [];
+      suggestions = sugg.suggestions || [];
+
+      const latestDate = elec.generated_at || app.generated_at || trav.generated_at;
+      if (latestDate) {
+        const d = new Date(latestDate);
+        const diff = Math.round((Date.now() - d) / 60000);
+        const label = diff < 60 ? `${diff}m ago` : `${Math.round(diff/60)}h ago`;
+        document.getElementById('updated-label').textContent = `Updated ${label}`;
+      }
+
+      document.getElementById('stat-total').textContent = allDeals.length;
+      document.getElementById('stat-suggestions').textContent = suggestions.length;
+
+      renderSearchList();
+      renderMain();
+    } catch(e) {
+      document.getElementById('main-content').innerHTML = `<div class="empty">Could not load deals. Run the pipeline first.<br><small>${e.message}</small></div>`;
+    }
+  }
+
+  function renderSearchList() {
+    const list = document.getElementById('search-list');
+    list.innerHTML = searchResults.map(r => `
+      <div class="search-item ${activeSearchId === r.search_id ? 'active' : ''}" onclick="selectSearch('${r.search_id}')">
+        <div class="search-item-label">${r.label}</div>
+        <div class="search-item-sub">${r.matches.length} match${r.matches.length !== 1 ? 'es' : ''}</div>
+      </div>
+    `).join('');
+  }
+
+  function selectSearch(id) {
+    activeSearchId = id;
+    activeCategory = 'searches';
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    document.querySelector('.pill[data-cat="searches"]').classList.add('active');
+    document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.mobile-tab[data-cat="searches"]').classList.add('active');
+    renderSearchList();
+    renderMain();
+  }
+
+  function renderMain() {
+    const container = document.getElementById('main-content');
+
+    if (activeCategory === 'settings') {
+      container.innerHTML = renderSettings();
+      return;
+    }
+
+    let html = '';
+
+    if (activeCategory === 'suggestions') {
+      html += renderSuggestions(suggestions);
+      container.innerHTML = html;
+      return;
+    }
+
+    if (activeCategory === 'searches') {
+      if (activeSearchId) {
+        const result = searchResults.find(r => r.search_id === activeSearchId);
+        if (result) {
+          html += `<div class="section-title">${result.label} — ${result.matches.length} match${result.matches.length !== 1 ? 'es' : ''}</div>`;
+          html += renderDealList(result.matches);
+        }
+      } else {
+        searchResults.forEach(r => {
+          html += `<div class="section-title">${r.label}</div>`;
+          html += renderDealList(r.matches.slice(0, 3));
+        });
+        if (searchResults.length === 0) {
+          html = '<div class="empty">No searches yet. Add one to get started.</div>';
+        }
+      }
+      container.innerHTML = html;
+      return;
+    }
+
+    if (suggestions.length > 0) {
+      html += `<div class="section-title">Suggestions for you</div>`;
+      html += renderDealList(suggestions.slice(0, 3), true);
+    }
+
+    const filtered = activeCategory === 'all'
+      ? allDeals
+      : allDeals.filter(d => d.category === activeCategory);
+
+    if (filtered.length > 0) {
+      html += `<div class="section-title">${activeCategory === 'all' ? 'All deals' : cap(activeCategory) + ' deals'}</div>`;
+      html += renderDealList(filtered.slice(0, 30));
+    } else {
+      html += '<div class="empty">No deals found. Try refreshing.</div>';
+    }
+
+    container.innerHTML = html;
+  }
+
+  function renderDealList(deals, isSuggestion = false) {
+    if (!deals || deals.length === 0) {
+      return '<div class="empty">No matches found.</div>';
+    }
+    return `<div class="deals-list">${deals.map(d => renderDeal(d, isSuggestion || d.why)).join('')}</div>`;
+  }
+
+  function renderDeal(deal, isSuggestion) {
+    const disc = deal.discount_pct ? Math.round(deal.discount_pct) : 0;
+    const price = deal.price != null ? `$${Number(deal.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : '';
+    const orig = deal.original_price ? `$${Number(deal.original_price).toLocaleString()}` : '';
+    const source = (deal.source || '').replace('reddit/r/', 'r/');
+    const ago = timeAgo(deal.posted_at);
+
+    return `
+      <div class="deal-card ${isSuggestion ? 'suggestion' : ''}">
+        <div style="flex:1">
+          <div class="deal-meta">
+            ${isSuggestion ? '<span class="badge badge-gold">&#9733; Top pick</span>' : ''}
+            ${disc > 0 ? `<span class="badge badge-green">${disc}% off</span>` : ''}
+            ${source ? `<span class="badge badge-source">${source}</span>` : ''}
+            ${ago ? `<span style="font-size:11px;color:var(--text-muted)">${ago}</span>` : ''}
+          </div>
+          <div class="deal-title">${esc(deal.title)}</div>
+          ${orig ? `<div class="deal-sub">Was ${orig}${deal.votes ? ` · ${deal.votes} upvotes` : ''}</div>` : (deal.votes ? `<div class="deal-sub">${deal.votes} upvotes</div>` : '')}
+          ${deal.why ? `<div class="deal-why">${esc(deal.why)}</div>` : ''}
+        </div>
+        <div class="deal-right">
+          ${price ? `<div class="deal-price">${price}</div>` : ''}
+          ${orig ? `<div class="deal-orig">${orig}</div>` : ''}
+          ${deal.url ? `<a href="${esc(deal.url)}" target="_blank" rel="noopener" class="deal-link">View ↗</a>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderSuggestions(list) {
+    return `<div class="section-title">Suggestions for you</div>${renderDealList(list, true)}`;
+  }
+
+  function renderSettings() {
+    const pat = localStorage.getItem('gh_pat') || '';
+    return `
+      <div class="section-title">Settings</div>
+      <div style="max-width:480px">
+        <div class="form-group" style="margin-bottom:16px">
+          <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px">GitHub Personal Access Token</label>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px">Required to save new searches back to the repo. Generate a token with <code>repo</code> scope at github.com/settings/tokens.</p>
+          <input type="password" id="pat-input" value="${esc(pat)}" placeholder="ghp_..." style="width:100%;padding:8px 10px;border:0.5px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg);color:var(--text)">
+        </div>
+        <button class="btn-save" style="padding:8px 20px;border-radius:8px;border:none;background:var(--navy);color:#fff;cursor:pointer;font-size:13px;font-weight:600" onclick="savePAT()">Save</button>
+      </div>
+    `;
+  }
+
+  function savePAT() {
+    const val = document.getElementById('pat-input').value.trim();
+    if (val) localStorage.setItem('gh_pat', val);
+    else localStorage.removeItem('gh_pat');
+    alert('Saved.');
+  }
+
+  function timeAgo(iso) {
+    if (!iso) return '';
+    try {
+      const diff = (Date.now() - new Date(iso)) / 60000;
+      if (diff < 60) return `${Math.round(diff)}m ago`;
+      if (diff < 1440) return `${Math.round(diff/60)}h ago`;
+      return `${Math.round(diff/1440)}d ago`;
+    } catch { return ''; }
+  }
+
+  function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  function setCategory(cat) {
+    activeCategory = cat;
+    if (cat !== 'searches') activeSearchId = null;
+    document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.cat === cat));
+    document.querySelectorAll('.mobile-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+    renderSearchList();
+    renderMain();
+  }
+
+  document.querySelectorAll('.pill').forEach(p => p.addEventListener('click', () => setCategory(p.dataset.cat)));
+  document.querySelectorAll('.mobile-tab').forEach(t => t.addEventListener('click', () => setCategory(t.dataset.cat)));
+
+  function openModal() {
+    const pat = localStorage.getItem('gh_pat');
+    document.getElementById('pat-notice').style.display = pat ? 'none' : 'block';
+    document.getElementById('modal').classList.add('open');
+  }
+  function closeModal() { document.getElementById('modal').classList.remove('open'); }
+  document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+
+  async function saveSearch() {
+    const label = document.getElementById('f-label').value.trim();
+    const category = document.getElementById('f-category').value;
+    const keywords = document.getElementById('f-keywords').value.split(',').map(k => k.trim()).filter(Boolean);
+    const maxPrice = parseFloat(document.getElementById('f-maxprice').value) || null;
+    const minDiscount = parseFloat(document.getElementById('f-mindiscount').value) || 0;
+
+    if (!label || keywords.length === 0) {
+      alert('Label and at least one keyword are required.');
+      return;
+    }
+
+    const newSearch = {
+      id: label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+      label,
+      category,
+      keywords,
+      max_price: maxPrice,
+      min_discount_pct: minDiscount,
+    };
+
+    const pat = localStorage.getItem('gh_pat');
+    if (!pat) {
+      alert('Enter your GitHub PAT in Settings to save searches.');
+      closeModal();
+      setCategory('settings');
+      return;
+    }
+
+    try {
+      const owner = 'jambione';
+      const repo = 'deal-finder';
+      const path = 'config/searches.json';
+
+      const fileResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' }
+      });
+      const fileData = await fileResp.json();
+      const current = JSON.parse(atob(fileData.content.replace(/\n/g, '')));
+      current.searches.push(newSearch);
+
+      await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `feat: add search "${label}"`,
+          content: btoa(JSON.stringify(current, null, 2)),
+          sha: fileData.sha,
+        }),
+      });
+
+      alert(`Search "${label}" saved. It will take effect on the next pipeline run.`);
+      closeModal();
+    } catch(e) {
+      alert(`Failed to save: ${e.message}`);
+    }
+  }
+
+  loadAll();
+</script>
+</body>
+</html>

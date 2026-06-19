@@ -1,0 +1,28 @@
+{
+  "searches": [
+    {
+      "id": "italy-flights",
+      "label": "Flights to Italy",
+      "category": "travel",
+      "keywords": ["italy", "rome", "milan", "venice", "florence"],
+      "max_price": 5000,
+      "min_discount_pct": 0
+    },
+    {
+      "id": "laptops-under-800",
+      "label": "Laptops under $800",
+      "category": "electronics",
+      "keywords": ["laptop", "notebook", "macbook", "dell xps", "lenovo", "thinkpad"],
+      "max_price": 800,
+      "min_discount_pct": 20
+    },
+    {
+      "id": "running-shoes",
+      "label": "Running shoes",
+      "category": "apparel",
+      "keywords": ["running shoes", "nike running", "adidas running", "brooks", "hoka", "asics"],
+      "max_price": 150,
+      "min_discount_pct": 25
+    }
+  ]
+}
