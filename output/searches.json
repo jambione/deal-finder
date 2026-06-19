@@ -1,10 +1,49 @@
 {
-  "generated_at": "2026-06-19T14:36:09.326089+00:00",
+  "generated_at": "2026-06-19T18:33:03.375857+00:00",
   "results": [
     {
       "search_id": "italy-flights",
       "label": "Flights to Italy",
       "matches": [
+        {
+          "title": "$2749 & up -- Upscale 8-night Italy vacation w/air",
+          "url": "https://www.travelzoo.com/direct/vacations/europe/-2749-up-Upscale-8-night-Italy-vacation-w-air-3266745/",
+          "price": 2749.0,
+          "original_price": null,
+          "source": "travelzoo",
+          "votes": 0,
+          "posted_at": "2026-06-19T15:58:00+00:00",
+          "image_url": null,
+          "category": "travel",
+          "discount_pct": 0,
+          "score": 20.0
+        },
+        {
+          "title": "$1069 & up -- Rome, Florence & Venice: 7 nights incl. flights",
+          "url": "https://www.travelzoo.com/direct/vacations/europe/-1069-up-Rome-Florence-Venice-7-nights-incl-flights-3266733/",
+          "price": 1069.0,
+          "original_price": null,
+          "source": "travelzoo",
+          "votes": 0,
+          "posted_at": "2026-06-19T15:46:00+00:00",
+          "image_url": null,
+          "category": "travel",
+          "discount_pct": 0,
+          "score": 20.0
+        },
+        {
+          "title": "$3239 & up -- Upscale Rome, Florence & Venice trip w/flights",
+          "url": "https://www.travelzoo.com/direct/vacations/europe/-3239-up-Upscale-Rome-Florence-Venice-trip-w-flights-3266731/",
+          "price": 3239.0,
+          "original_price": null,
+          "source": "travelzoo",
+          "votes": 0,
+          "posted_at": "2026-06-19T15:45:00+00:00",
+          "image_url": null,
+          "category": "travel",
+          "discount_pct": 0,
+          "score": 20.0
+        },
         {
           "title": "$1849 -- Italy and Greece 9-night explorer w/airfare",
           "url": "https://www.travelzoo.com/direct/vacations/europe/-1849-Italy-and-Greece-9-night-explorer-w-airfare-3266633/",
@@ -26,45 +65,6 @@
           "source": "travelzoo",
           "votes": 0,
           "posted_at": "2026-06-16T07:00:00+00:00",
-          "image_url": null,
-          "category": "travel",
-          "discount_pct": 0,
-          "score": 0.0
-        },
-        {
-          "title": "$2749 & up -- Upscale 8-night Italy vacation w/air",
-          "url": "https://www.travelzoo.com/direct/vacations/europe/-2749-up-Upscale-8-night-Italy-vacation-w-air-3265581/",
-          "price": 2749.0,
-          "original_price": null,
-          "source": "travelzoo",
-          "votes": 0,
-          "posted_at": "2026-06-12T16:54:00+00:00",
-          "image_url": null,
-          "category": "travel",
-          "discount_pct": 0,
-          "score": 0.0
-        },
-        {
-          "title": "$1069 & up -- Rome, Florence & Venice: 7 nights incl. flights",
-          "url": "https://www.travelzoo.com/direct/vacations/europe/-1069-up-Rome-Florence-Venice-7-nights-incl-flights-3265569/",
-          "price": 1069.0,
-          "original_price": null,
-          "source": "travelzoo",
-          "votes": 0,
-          "posted_at": "2026-06-12T16:44:00+00:00",
-          "image_url": null,
-          "category": "travel",
-          "discount_pct": 0,
-          "score": 0.0
-        },
-        {
-          "title": "$3239 & up -- Upscale Rome, Florence & Venice trip w/flights",
-          "url": "https://www.travelzoo.com/direct/vacations/europe/-3239-up-Upscale-Rome-Florence-Venice-trip-w-flights-3265568/",
-          "price": 3239.0,
-          "original_price": null,
-          "source": "travelzoo",
-          "votes": 0,
-          "posted_at": "2026-06-12T16:43:00+00:00",
           "image_url": null,
           "category": "travel",
           "discount_pct": 0,
@@ -237,7 +237,7 @@
           "image_url": null,
           "category": "travel",
           "discount_pct": 0,
-          "score": 20.0
+          "score": 10.0
         },
         {
           "title": "Check Out Italy's Stunning Saturnia Hot Springs \ud83d\ude0d \ud83c\udf47",
@@ -257,7 +257,22 @@
     {
       "search_id": "laptops-under-800",
       "label": "Laptops under $800",
-      "matches": []
+      "matches": [
+        {
+          "title": "Top off your iPhone, iPad, MacBook Neo, Air, more with this retractable USB-C charger for only $9",
+          "url": "https://9to5toys.com/2026/06/19/lisen-retractable-72w-usb-c-car-charger/",
+          "price": 9.0,
+          "original_price": null,
+          "discount_hint_pct": 30,
+          "source": "9to5toys",
+          "votes": 0,
+          "posted_at": "2026-06-19T16:04:27+00:00",
+          "image_url": null,
+          "category": "electronics",
+          "discount_pct": 30,
+          "score": 35.0
+        }
+      ]
     },
     {
       "search_id": "running-shoes",
