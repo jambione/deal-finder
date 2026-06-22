@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Brasfield Deals — NYC→Milan Flight Tracker</title>
+<link rel="icon" type="image/png" href="assets/brasfield-logo.png">
 <style>
   :root {
     --navy: #1B2438;
@@ -33,10 +34,9 @@
     position: sticky; top: 0; z-index: 100;
   }
   .nav-brand { display: flex; align-items: center; gap: 10px; }
-  .nav-logo { width: 32px; height: 32px; background: var(--gold); border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 16px; color: var(--navy); }
-  .nav-title { font-size: 15px; font-weight: 700; color: #fff; }
+  .nav-logo { width: 36px; height: 36px; object-fit: contain; }
+  .nav-title { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .nav-title span { color: var(--gold); }
   .nav-subtitle { font-size: 11px; color: var(--muted); margin-top: 1px; }
   .nav-right { display: flex; align-items: center; gap: 10px; }
   .btn-ghost { background: none; border: 1px solid var(--border); color: var(--text);
@@ -186,9 +186,9 @@
 
 <nav>
   <div class="nav-brand">
-    <div class="nav-logo">B</div>
+    <img class="nav-logo" src="assets/brasfield-logo.png" alt="B" onerror="this.style.display='none'">
     <div>
-      <div class="nav-title">Brasfield Deals</div>
+      <div class="nav-title">Brasfield <span>Deals</span></div>
       <div class="nav-subtitle">NYC → Milan Flight Tracker</div>
     </div>
   </div>
