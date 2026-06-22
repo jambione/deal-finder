@@ -162,7 +162,8 @@
   .alert-box { background: var(--card2); border: 1px solid var(--border); border-radius: 12px;
     padding: 20px; margin-bottom: 24px; }
   .alert-box h3 { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--gold); }
-  .alert-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .alert-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .alert-currency { font-size: 13px; color: var(--muted); }
   .alert-input { background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
     color: var(--text); padding: 8px 12px; font-size: 14px; width: 160px; }
   .alert-input:focus { outline: none; border-color: var(--gold); }
@@ -519,9 +520,10 @@ function render() {
 
     <!-- PRICE ALERT -->
     <div class="alert-box">
-      <h3>Price Alert</h3>
+      <h3>🔔 Price Alert — notify me when fares drop below</h3>
       <div class="alert-row">
-        <input class="alert-input" type="number" id="alert-price" placeholder="Target price $" value="${localStorage.getItem('bd_alert_price') || ''}">
+        <input class="alert-input" type="number" id="alert-price" placeholder="e.g. 4500" value="${localStorage.getItem('bd_alert_price') || ''}">
+        <span class="alert-currency">per person</span>
         <button class="btn-gold" onclick="saveAlert()">Set Alert</button>
       </div>
       <div class="alert-status" id="alert-status">${renderAlertStatus(best)}</div>
