@@ -180,6 +180,53 @@
   .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border);
     border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* FLIGHT SEARCHES */
+  .searches-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .searches-title { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); }
+  .btn-add { background: var(--gold-dim); border: 1px solid rgba(201,164,74,0.3); color: var(--gold);
+    padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; }
+  .btn-add:hover { background: rgba(201,164,74,0.25); }
+  .search-item { display: flex; align-items: center; gap: 12px; padding: 14px 0;
+    border-bottom: 1px solid var(--border); }
+  .search-item:last-child { border-bottom: none; }
+  .search-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--navy-light);
+    display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .search-body { flex: 1; min-width: 0; }
+  .search-route { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .search-badge { display: inline-block; padding: 1px 7px; border-radius: 8px; font-size: 10px; font-weight: 700;
+    background: rgba(201,164,74,0.12); color: var(--gold); margin-left: 6px; }
+  .search-actions-row { display: flex; gap: 6px; flex-shrink: 0; }
+  .btn-sm { padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid; }
+  .btn-sm-edit { background: none; border-color: var(--border); color: var(--muted); }
+  .btn-sm-edit:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .btn-sm-del { background: none; border-color: transparent; color: rgba(232,85,85,0.6); }
+  .btn-sm-del:hover { color: var(--red); }
+  .btn-sm-search { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+  .btn-sm-search:hover { filter: brightness(1.08); }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    z-index: 200; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 28px; width: 100%; max-width: 480px; margin: 20px; }
+  .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--muted); margin-bottom: 6px; }
+  .form-group input, .form-group select {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); padding: 10px 12px; font-size: 14px;
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--gold); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+  .btn-cancel { background: none; border: 1px solid var(--border); color: var(--muted);
+    padding: 9px 18px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+  .btn-save { background: var(--gold); border: none; color: var(--navy);
+    padding: 9px 18px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -209,8 +256,168 @@
   Brasfield Deals · Flight prices update daily · Oil data via EIA · Not financial advice
 </footer>
 
+<!-- Flight Search Modal -->
+<div class="modal-overlay" id="search-modal">
+  <div class="modal">
+    <h2 id="modal-heading">Add a flight search</h2>
+    <input type="hidden" id="f-id">
+    <div class="form-row">
+      <div class="form-group">
+        <label>From (airport code)</label>
+        <input id="f-origin" placeholder="JFK, EWR, LGA">
+      </div>
+      <div class="form-group">
+        <label>To (airport code)</label>
+        <input id="f-dest" placeholder="MXP, LIN, FCO">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Label</label>
+      <input id="f-label" placeholder="e.g. Milan anniversary trip">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Cabin</label>
+        <select id="f-cabin">
+          <option value="business">Business</option>
+          <option value="premium_economy">Premium Economy</option>
+          <option value="economy">Economy</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Travel month(s)</label>
+        <input id="f-months" placeholder="June, July 2027">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Target price (per person, $)</label>
+      <input id="f-target" type="number" placeholder="3500">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeSearchModal()">Cancel</button>
+      <button class="btn-save" onclick="saveSearch()">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const BASE = '';
+const LS_ROUTES = 'bd_routes';
+const DEFAULT_ROUTE = {
+  id: 'nyc-milan',
+  label: 'NYC → Milan',
+  origin: 'JFK / EWR',
+  dest: 'MXP / LIN',
+  cabin: 'business',
+  months: 'June & July 2027',
+  target: null,
+  monitored: true,
+};
+
+function loadRoutes() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(LS_ROUTES) || 'null');
+    if (stored && stored.length) return stored;
+  } catch {}
+  // Seed with default
+  const routes = [DEFAULT_ROUTE];
+  localStorage.setItem(LS_ROUTES, JSON.stringify(routes));
+  return routes;
+}
+function saveRoutes(routes) { localStorage.setItem(LS_ROUTES, JSON.stringify(routes)); }
+
+let routes = loadRoutes();
+
+function openSearchModal(id) {
+  const r = id ? routes.find(r => r.id === id) : null;
+  document.getElementById('modal-heading').textContent = r ? 'Edit flight search' : 'Add a flight search';
+  document.getElementById('f-id').value = r ? r.id : '';
+  document.getElementById('f-origin').value = r ? r.origin : '';
+  document.getElementById('f-dest').value = r ? r.dest : '';
+  document.getElementById('f-label').value = r ? r.label : '';
+  document.getElementById('f-cabin').value = r ? r.cabin : 'business';
+  document.getElementById('f-months').value = r ? r.months : '';
+  document.getElementById('f-target').value = r && r.target ? r.target : '';
+  document.getElementById('search-modal').classList.add('open');
+}
+function closeSearchModal() { document.getElementById('search-modal').classList.remove('open'); }
+document.getElementById('search-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('search-modal')) closeSearchModal();
+});
+
+function saveSearch() {
+  const id = document.getElementById('f-id').value;
+  const origin = document.getElementById('f-origin').value.trim().toUpperCase();
+  const dest = document.getElementById('f-dest').value.trim().toUpperCase();
+  const label = document.getElementById('f-label').value.trim();
+  const cabin = document.getElementById('f-cabin').value;
+  const months = document.getElementById('f-months').value.trim();
+  const target = parseFloat(document.getElementById('f-target').value) || null;
+  if (!origin || !dest) { alert('Origin and destination are required.'); return; }
+  const newId = id || (origin + '-' + dest + '-' + Date.now()).toLowerCase().replace(/[^a-z0-9-]/g,'');
+  const entry = { id: newId, label: label || `${origin} → ${dest}`, origin, dest, cabin, months, target, monitored: id === 'nyc-milan' };
+  const idx = routes.findIndex(r => r.id === id);
+  if (idx >= 0) routes[idx] = { ...routes[idx], ...entry };
+  else routes.push(entry);
+  saveRoutes(routes);
+  closeSearchModal();
+  renderSearches();
+}
+
+function deleteSearch(id) {
+  if (id === 'nyc-milan') { alert('The default NYC→Milan route cannot be deleted.'); return; }
+  if (!confirm('Delete this flight search?')) return;
+  routes = routes.filter(r => r.id !== id);
+  saveRoutes(routes);
+  renderSearches();
+}
+
+function googleFlightsUrl(r) {
+  // Deep link to Google Flights
+  const origins = r.origin.replace(/\s/g,'').split('/').join(',');
+  const dests = r.dest.replace(/\s/g,'').split('/').join(',');
+  return `https://www.google.com/travel/flights?q=Flights+from+${encodeURIComponent(origins)}+to+${encodeURIComponent(dests)}`;
+}
+
+function renderSearches() {
+  const container = document.getElementById('searches-section');
+  if (!container) return;
+  const cabinLabel = { business: 'Business', premium_economy: 'Prem Eco', economy: 'Economy' };
+  container.innerHTML = `
+    <div class="card" style="margin-bottom:24px">
+      <div class="searches-header">
+        <div class="searches-title">Flight Searches</div>
+        <button class="btn-add" onclick="openSearchModal()">+ Add search</button>
+      </div>
+      ${routes.map(r => {
+        const best = flightsData.filter(f => f.cabin === r.cabin).sort((a,b) => a.price - b.price)[0];
+        const hit = r.monitored && best;
+        const atTarget = hit && r.target && best.price <= r.target;
+        return `
+        <div class="search-item">
+          <div class="search-icon">✈</div>
+          <div class="search-body">
+            <div class="search-route">${esc(r.label)}
+              ${r.monitored ? '<span class="search-badge">Monitored</span>' : ''}
+              ${atTarget ? '<span class="search-badge" style="background:rgba(39,197,111,0.12);color:var(--green)">At target!</span>' : ''}
+            </div>
+            <div class="search-meta">
+              ${esc(r.origin)} → ${esc(r.dest)} · ${esc(cabinLabel[r.cabin] || r.cabin)}
+              ${r.months ? ' · ' + esc(r.months) : ''}
+              ${r.target ? ' · Target: ' + fmt(r.target) : ''}
+              ${hit ? ' · <strong style="color:var(--gold)">' + fmt(best.price) + ' today</strong>' : ''}
+            </div>
+          </div>
+          <div class="search-actions-row">
+            <button class="btn-sm btn-sm-search" onclick="window.open('${googleFlightsUrl(r)}','_blank')">Search</button>
+            <button class="btn-sm btn-sm-edit" onclick="openSearchModal('${r.id}')">Edit</button>
+            ${r.monitored ? '' : `<button class="btn-sm btn-sm-del" onclick="deleteSearch('${r.id}')">✕</button>`}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
 let flightsData = [];
 let oilData = {};
 let sentimentData = {};
@@ -333,11 +540,15 @@ function render() {
       ${renderSentimentCard()}
     </div>
 
+    <!-- FLIGHT SEARCHES -->
+    <div id="searches-section"></div>
+
     <!-- PRICE TABLE -->
     ${renderPriceTable()}
   `;
 
   drawChart();
+  renderSearches();
 }
 
 function renderAlertStatus(best) {
