@@ -63,6 +63,7 @@
   .hero-route { font-size: 13px; color: var(--gold); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
   .hero-price { font-size: 56px; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 6px; }
   .hero-price span { font-size: 20px; font-weight: 400; color: var(--muted); }
+  .hero-price-empty { font-size: 22px; font-weight: 500; color: var(--muted); margin-bottom: 6px; font-style: italic; }
   .hero-meta { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
   .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; }
   .cabin-pill {
@@ -501,7 +502,7 @@ function render() {
     <!-- HERO -->
     <div class="hero">
       <div class="hero-route">✈ New York → Milan · June & July 2027</div>
-      <div class="hero-price">${heroPrice} <span>/ person</span></div>
+      ${best ? `<div class="hero-price">${heroPrice} <span>/ person</span></div>` : `<div class="hero-price-empty">Awaiting first data run</div>`}
       <div class="hero-meta">${heroMeta}</div>
       <div class="hero-pills">
         <button class="cabin-pill ${activeCabin === 'business' ? 'active' : ''}" onclick="setCabin('business')">Business Class</button>
