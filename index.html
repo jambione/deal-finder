@@ -1,1185 +1,601 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brasfield Deals</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brasfield Deals — NYC→Milan Flight Tracker</title>
+<style>
+  :root {
+    --navy: #1B2438;
+    --navy-light: #243050;
+    --gold: #C9A44A;
+    --gold-dim: rgba(201,164,74,0.15);
+    --green: #27c56f;
+    --red: #e85555;
+    --yellow: #f0b429;
+    --bg: #0f1520;
+    --card: #1a2236;
+    --card2: #1f2840;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8eaf0;
+    --muted: rgba(232,234,240,0.5);
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
 
-    :root {
-      --navy: #1B2438;
-      --navy-dark: #131929;
-      --navy-light: rgba(255,255,255,0.08);
-      --gold: #C9A44A;
-      --gold-muted: rgba(201,164,74,0.18);
-      --gold-border: rgba(201,164,74,0.45);
-      --green-bg: #EAF3DE;
-      --green-text: #27500A;
-      --bg: #f5f5f3;
-      --surface: #ffffff;
-      --text: #1a1a1a;
-      --text-muted: #666;
-      --border: rgba(0,0,0,0.1);
-      --radius: 10px;
-      --radius-lg: 14px;
-    }
+  /* NAV */
+  nav {
+    background: var(--navy);
+    padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; }
+  .nav-logo { width: 32px; height: 32px; background: var(--gold); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px; color: var(--navy); }
+  .nav-title { font-size: 15px; font-weight: 700; color: #fff; }
+  .nav-subtitle { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .btn-ghost { background: none; border: 1px solid var(--border); color: var(--text);
+    padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px;
+    display: flex; align-items: center; gap: 5px; }
+  .btn-ghost:hover { background: var(--navy-light); }
+  .last-updated { font-size: 11px; color: var(--muted); }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f1520;
-        --surface: #1a2235;
-        --text: #f0f0ee;
-        --text-muted: #8a9bb0;
-        --border: rgba(255,255,255,0.1);
-        --green-bg: #1a2e10;
-        --green-text: #7ec85a;
-      }
-    }
+  /* LAYOUT */
+  .page { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #0f1a2e 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px; margin-bottom: 24px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '✈';
+    position: absolute; right: 32px; top: 50%; transform: translateY(-50%);
+    font-size: 80px; opacity: 0.05;
+  }
+  .hero-route { font-size: 13px; color: var(--gold); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .hero-price { font-size: 56px; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 6px; }
+  .hero-price span { font-size: 20px; font-weight: 400; color: var(--muted); }
+  .hero-meta { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cabin-pill {
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+    font-size: 12px; font-weight: 600; cursor: pointer; background: none; color: var(--text);
+  }
+  .cabin-pill.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
 
-    /* NAV */
-    nav {
-      background: var(--navy);
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      height: 56px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+  /* SIGNAL BANNER */
+  .signal-banner {
+    border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;
+    display: flex; align-items: flex-start; gap: 14px;
+    border: 1px solid;
+  }
+  .signal-banner.buy_now { background: rgba(39,197,111,0.08); border-color: rgba(39,197,111,0.3); }
+  .signal-banner.wait { background: rgba(240,180,41,0.08); border-color: rgba(240,180,41,0.3); }
+  .signal-banner.neutral { background: rgba(255,255,255,0.04); border-color: var(--border); }
+  .signal-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+  .signal-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .signal-banner.buy_now .signal-label { color: var(--green); }
+  .signal-banner.wait .signal-label { color: var(--yellow); }
+  .signal-banner.neutral .signal-label { color: var(--muted); }
+  .signal-reason { font-size: 13px; color: var(--text); line-height: 1.5; }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      flex-shrink: 0;
-    }
-    .logo img { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; }
-    .logo-text { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; }
-    .logo-text span { color: var(--gold); }
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
 
-    .nav-pills {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      flex: 1;
-    }
-    .nav-pills::-webkit-scrollbar { display: none; }
+  /* CARDS */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card-title { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 14px; }
 
-    .pill {
-      font-size: 12px;
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 0.5px solid rgba(255,255,255,0.2);
-      background: transparent;
-      color: rgba(255,255,255,0.65);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s, color 0.15s;
-    }
-    .pill:hover { background: rgba(255,255,255,0.1); color: #fff; }
-    .pill.active { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 600; }
+  /* PRICE TABLE */
+  .price-table { width: 100%; border-collapse: collapse; }
+  .price-table th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--muted); padding: 0 0 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  .price-table td { padding: 12px 0 0; vertical-align: top; font-size: 13px; }
+  .price-table td:last-child { text-align: right; }
+  .price-val { font-size: 18px; font-weight: 700; color: #fff; }
+  .price-airline { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .badge-cabin { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+  .badge-biz { background: var(--gold-dim); color: var(--gold); }
+  .badge-pe { background: rgba(100,160,255,0.1); color: #7ab0ff; }
+  .badge-best { background: rgba(39,197,111,0.12); color: var(--green); }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-    .updated-label { font-size: 11px; color: rgba(255,255,255,0.35); white-space: nowrap; }
-    .btn-ghost {
-      font-size: 12px;
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 0.5px solid rgba(255,255,255,0.2);
-      background: transparent;
-      color: rgba(255,255,255,0.7);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: background 0.15s;
-    }
-    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+  /* CHART */
+  .chart-wrap { position: relative; height: 180px; margin-top: 8px; }
+  canvas { width: 100% !important; height: 100% !important; }
+  .chart-legend { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-    .sort-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-    .sort-bar label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
-    .sort-select {
-      font-size: 12px;
-      padding: 5px 28px 5px 10px;
-      border: 0.5px solid var(--border);
-      border-radius: 20px;
-      background: var(--surface);
-      color: var(--text);
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 8px center;
-    }
-    .sort-select:focus { outline: none; border-color: var(--gold); }
-    .filter-input {
-      flex: 1;
-      min-width: 120px;
-      max-width: 280px;
-      font-size: 12px;
-      padding: 5px 12px;
-      border: 0.5px solid var(--border);
-      border-radius: 20px;
-      background: var(--surface);
-      color: var(--text);
-    }
-    .filter-input:focus { outline: none; border-color: var(--gold); }
-    .filter-input::placeholder { color: var(--text-muted); }
+  /* OIL */
+  .oil-price { font-size: 32px; font-weight: 800; color: #fff; }
+  .oil-unit { font-size: 13px; color: var(--muted); margin-left: 4px; }
+  .oil-change { font-size: 13px; margin-top: 6px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .chg-up { color: var(--red); }
+  .chg-down { color: var(--green); }
+  .chg-flat { color: var(--muted); }
 
-    /* LAYOUT */
-    .layout {
-      display: flex;
-      max-width: 1200px;
-      margin: 0 auto;
-      min-height: calc(100vh - 56px);
-    }
+  /* SENTIMENT */
+  .sentiment-score { font-size: 40px; font-weight: 800; text-align: center; padding: 12px 0 4px; }
+  .sentiment-label { text-align: center; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .sentiment-bar { height: 8px; border-radius: 4px; margin: 12px 0 8px;
+    background: linear-gradient(to right, var(--green), #888, var(--red)); position: relative; }
+  .sentiment-marker { position: absolute; top: -4px; width: 16px; height: 16px;
+    background: #fff; border-radius: 50%; border: 2px solid var(--navy);
+    transform: translateX(-50%); transition: left 0.5s; }
+  .sentiment-headlines { margin-top: 12px; }
+  .headline-item { font-size: 11px; color: var(--muted); padding: 6px 0;
+    border-top: 1px solid var(--border); line-height: 1.4; }
+  .hl-bullish { color: #e8a0a0; }
+  .hl-bearish { color: #a0e8b0; }
 
-    /* SIDEBAR */
-    aside {
-      width: 220px;
-      flex-shrink: 0;
-      background: var(--navy);
-      padding: 20px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+  /* MONTH COMPARISON */
+  .month-row { display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .month-row:last-child { border-bottom: none; }
+  .month-name { font-size: 14px; font-weight: 600; }
+  .month-price { font-size: 18px; font-weight: 700; }
+  .month-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+  .tag-best { background: rgba(39,197,111,0.15); color: var(--green); }
+  .tag-higher { background: rgba(232,85,85,0.1); color: #e89090; }
 
-    .sidebar-section-label {
-      font-size: 10px;
-      color: rgba(255,255,255,0.3);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 8px;
-    }
+  /* ROUTE CARDS */
+  .route-card { padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .route-card:last-child { border-bottom: none; }
+  .route-airports { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .route-arrow { color: var(--muted); }
+  .route-price { font-size: 20px; font-weight: 800; color: var(--gold); }
+  .route-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
-    .search-list { display: flex; flex-direction: column; gap: 2px; }
+  /* ALERT BOX */
+  .alert-box { background: var(--card2); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; margin-bottom: 24px; }
+  .alert-box h3 { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--gold); }
+  .alert-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .alert-input { background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); padding: 8px 12px; font-size: 14px; width: 160px; }
+  .alert-input:focus { outline: none; border-color: var(--gold); }
+  .btn-gold { background: var(--gold); color: var(--navy); border: none; border-radius: 8px;
+    padding: 8px 18px; font-weight: 700; font-size: 13px; cursor: pointer; }
+  .btn-gold:hover { filter: brightness(1.08); }
+  .alert-status { font-size: 12px; color: var(--muted); margin-top: 8px; }
 
-    .search-item {
-      padding: 8px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.12s;
-    }
-    .search-item:hover { background: rgba(255,255,255,0.06); }
-    .search-item.active { background: var(--gold-muted); }
-    .search-item-label { font-size: 13px; color: #fff; font-weight: 500; }
-    .search-item-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+  /* FOOTER */
+  footer { text-align: center; padding: 32px 20px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); margin-top: 24px; }
 
-    /* CRUD controls */
-    .search-detail-head, .search-overview-head {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; margin-bottom: 10px;
-    }
-    .search-actions { display: flex; gap: 6px; flex-shrink: 0; }
-    .btn-mini {
-      font-size: 12px; padding: 4px 12px; border-radius: 16px;
-      border: 0.5px solid var(--border); background: var(--surface);
-      color: var(--text); cursor: pointer;
-    }
-    .btn-mini:hover { border-color: var(--gold); }
-    .btn-mini-danger { color: #c0392b; }
-    .btn-mini-danger:hover { border-color: #c0392b; background: rgba(192,57,43,0.06); }
-    .search-overview { margin-bottom: 22px; }
-    .search-overview-label { font-size: 15px; font-weight: 600; color: var(--text); cursor: pointer; }
-    .search-overview-label:hover { color: var(--gold); }
-    .search-overview-count { font-size: 12px; font-weight: 400; color: var(--text-muted); margin-left: 8px; }
-    .search-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-    .meta-chip {
-      font-size: 11px; padding: 3px 10px; border-radius: 12px;
-      background: var(--surface); border: 0.5px solid var(--border); color: var(--text-muted);
-    }
-
-    /* Settings */
-    .settings-card {
-      border: 0.5px solid var(--border); border-radius: 12px;
-      padding: 18px 20px; margin-bottom: 18px; background: var(--surface);
-    }
-    .settings-h3 { font-size: 15px; font-weight: 600; color: var(--text); margin: 0 0 4px; }
-    .settings-p { font-size: 12px; color: var(--text-muted); margin: 0 0 14px; line-height: 1.5; }
-    .settings-note { font-size: 11px; color: var(--text-muted); margin: 12px 0 0; line-height: 1.5; }
-    .settings-input {
-      padding: 8px 10px; border: 0.5px solid var(--border); border-radius: 8px;
-      font-size: 14px; background: var(--bg); color: var(--text);
-    }
-    .settings-input:focus { outline: none; border-color: var(--gold); }
-    .settings-btn { padding: 8px 18px; border-radius: 8px; border: none; background: var(--navy); color: #fff; cursor: pointer; font-size: 13px; font-weight: 600; }
-    .sub-list { display: flex; flex-direction: column; }
-    .sub-row {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border);
-    }
-    .sub-row:last-child { border-bottom: none; }
-    .sub-email { font-size: 14px; color: var(--text); }
-    .sub-email.sub-inactive { color: var(--text-muted); text-decoration: line-through; }
-    .sub-name { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
-    .sub-add { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-
-    /* Admin gating: hidden by default, shown only in admin mode */
-    .admin-only { display: none !important; }
-    body.admin .admin-only { display: flex !important; }
-
-    .btn-subscribe {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 12px; font-weight: 600; padding: 7px 14px;
-      border-radius: 20px; border: none; cursor: pointer;
-      background: var(--gold); color: var(--navy);
-    }
-    .btn-subscribe:hover { filter: brightness(1.05); }
-
-    .btn-add-search {
-      width: 100%;
-      font-size: 12px;
-      padding: 7px 10px;
-      border-radius: 8px;
-      border: 0.5px solid var(--gold-border);
-      background: var(--gold-muted);
-      color: var(--gold);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      margin-top: 6px;
-      transition: background 0.15s;
-    }
-    .btn-add-search:hover { background: rgba(201,164,74,0.28); }
-
-    .stat-grid { display: flex; flex-direction: column; gap: 6px; }
-    .stat-card {
-      background: rgba(255,255,255,0.06);
-      border-radius: 8px;
-      padding: 8px 10px;
-    }
-    .stat-label { font-size: 11px; color: rgba(255,255,255,0.4); }
-    .stat-val { font-size: 18px; font-weight: 600; color: #fff; margin-top: 1px; }
-
-    /* MAIN */
-    main {
-      flex: 1;
-      padding: 24px 24px;
-      overflow-y: auto;
-    }
-
-    .section-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    /* DEAL CARDS */
-    .deals-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
-
-    .deal-card {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 14px 16px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      transition: border-color 0.15s;
-    }
-    .deal-card:hover { border-color: rgba(0,0,0,0.2); }
-    .deal-card.suggestion { border: 2px solid var(--gold); }
-
-    .deal-thumb {
-      width: 64px; height: 64px; flex-shrink: 0;
-      border-radius: 8px; object-fit: contain;
-      background: #fff; border: 0.5px solid var(--border);
-    }
-    @media (max-width: 768px) { .deal-thumb { width: 52px; height: 52px; } }
-
-    .deal-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 5px; }
-
-    .badge {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 20px;
-    }
-    .badge-gold { background: var(--gold); color: var(--navy); }
-    .badge-green { background: var(--green-bg); color: var(--green-text); }
-    .badge-source { background: transparent; border: 0.5px solid var(--border); color: var(--text-muted); font-weight: 400; }
-
-    .deal-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-    .deal-sub { font-size: 12px; color: var(--text-muted); }
-    .deal-why { font-size: 12px; color: var(--gold); margin-top: 5px; }
-
-    .deal-right { text-align: right; flex-shrink: 0; }
-    .deal-price { font-size: 18px; font-weight: 700; color: var(--text); }
-    .deal-orig { font-size: 12px; color: var(--text-muted); text-decoration: line-through; margin-top: 1px; }
-    .deal-link {
-      font-size: 12px;
-      color: var(--gold);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      margin-top: 6px;
-    }
-    .deal-link:hover { text-decoration: underline; }
-
-    /* EMPTY STATE */
-    .empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
-
-    /* MODAL */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      width: 100%;
-      max-width: 420px;
-      margin: 16px;
-    }
-    .modal h2 { font-size: 17px; font-weight: 600; margin-bottom: 16px; }
-    .form-group { margin-bottom: 14px; }
-    .form-group label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px; }
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 0.5px solid var(--border);
-      border-radius: 8px;
-      font-size: 14px;
-      background: var(--bg);
-      color: var(--text);
-    }
-    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
-    .btn-cancel {
-      padding: 8px 16px;
-      border-radius: 8px;
-      border: 0.5px solid var(--border);
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 13px;
-    }
-    .btn-save {
-      padding: 8px 16px;
-      border-radius: 8px;
-      border: none;
-      background: var(--navy);
-      color: #fff;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .btn-save:hover { background: var(--gold); color: var(--navy); }
-
-    /* PAT NOTICE */
-    .pat-notice {
-      font-size: 12px;
-      color: var(--text-muted);
-      background: var(--bg);
-      border: 0.5px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 10px;
-      margin-bottom: 14px;
-    }
-
-    /* MOBILE */
-    .mobile-bottom-nav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--navy);
-      padding: 10px 0 16px;
-      z-index: 100;
-    }
-    .mobile-tabs {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-    }
-    .mobile-tab {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      cursor: pointer;
-      padding: 4px 0;
-    }
-    .mobile-tab svg { width: 22px; height: 22px; }
-    .mobile-tab span { font-size: 10px; color: rgba(255,255,255,0.4); }
-    .mobile-tab.active svg path, .mobile-tab.active svg rect,
-    .mobile-tab.active svg polyline, .mobile-tab.active svg line,
-    .mobile-tab.active svg circle { stroke: var(--gold); }
-    .mobile-tab.active span { color: var(--gold); }
-
-    /* Loading spinner */
-    .loading {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-
-    @media (max-width: 768px) {
-      nav { padding: 0 14px; }
-      .updated-label { display: none; }
-      .nav-right .btn-ghost { display: none; }
-      aside { display: none; }
-      main { padding: 16px 14px 80px; }
-      .mobile-bottom-nav { display: block; }
-      .layout { display: block; }
-    }
-
-    @media (min-width: 769px) {
-      .mobile-bottom-nav { display: none !important; }
-    }
-  </style>
+  /* NO DATA */
+  .no-data { text-align: center; padding: 48px 20px; color: var(--muted); }
+  .no-data h2 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border);
+    border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
 </head>
 <body>
 
 <nav>
-  <a href="/" class="logo">
-    <img src="assets/brasfield-logo.png" alt="Brasfield logo">
-    <span class="logo-text">Brasfield <span>Deals</span></span>
-  </a>
-  <div class="nav-pills">
-    <button class="pill active" data-cat="all">All</button>
-    <button class="pill" data-cat="electronics">Electronics</button>
-    <button class="pill" data-cat="apparel">Apparel</button>
-    <button class="pill" data-cat="travel">Travel</button>
-    <button class="pill" data-cat="games">Games</button>
-    <button class="pill" data-cat="software">Software</button>
-    <button class="pill" data-cat="searches">My searches</button>
-    <button class="pill" data-cat="suggestions">Picks</button>
+  <div class="nav-brand">
+    <div class="nav-logo">B</div>
+    <div>
+      <div class="nav-title">Brasfield Deals</div>
+      <div class="nav-subtitle">NYC → Milan Flight Tracker</div>
+    </div>
   </div>
   <div class="nav-right">
-    <span class="updated-label" id="updated-label">Loading...</span>
-    <button class="btn-subscribe" onclick="openSubscribeModal()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
-      Subscribe
-    </button>
-    <button class="btn-ghost admin-only" id="run-now-btn" onclick="runNow()" title="Trigger a fresh pipeline run on GitHub">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      Run now
-    </button>
-    <button class="btn-ghost admin-only" onclick="setCategory('settings')" title="Admin settings">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      Settings
-    </button>
+    <span class="last-updated" id="last-updated">Loading...</span>
     <button class="btn-ghost" onclick="loadAll()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
       Refresh
     </button>
   </div>
 </nav>
 
-<div class="layout">
-  <aside id="sidebar">
-    <div>
-      <div class="sidebar-section-label">My searches</div>
-      <div class="search-list" id="search-list"></div>
-      <button class="btn-add-search" onclick="openModal()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Add search
-      </button>
-    </div>
-    <div>
-      <div class="sidebar-section-label">Stats</div>
-      <div class="stat-grid">
-        <div class="stat-card"><div class="stat-label">Total deals</div><div class="stat-val" id="stat-total">—</div></div>
-        <div class="stat-card"><div class="stat-label">Suggestions</div><div class="stat-val" id="stat-suggestions">—</div></div>
-      </div>
-    </div>
-  </aside>
-
-  <main id="main-content">
-    <div class="loading">Loading deals...</div>
-  </main>
-  <div id="sort-bar-portal"></div>
+<div class="page" id="page">
+  <div class="no-data"><div class="spinner"></div></div>
 </div>
 
-<div class="mobile-bottom-nav">
-  <div class="mobile-tabs">
-    <div class="mobile-tab active" data-cat="all">
-      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span>Home</span>
-    </div>
-    <div class="mobile-tab" data-cat="searches">
-      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <span>Searches</span>
-    </div>
-    <div class="mobile-tab" data-cat="suggestions">
-      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <span>Picks</span>
-    </div>
-    <div class="mobile-tab admin-only" data-cat="settings">
-      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      <span>Settings</span>
-    </div>
-  </div>
-</div>
-
-<!-- Subscribe Modal (public) -->
-<div class="modal-overlay" id="subscribe-modal">
-  <div class="modal">
-    <h2>Get the top deals by email</h2>
-    <p style="font-size:13px;color:var(--text-muted);margin:-6px 0 16px;line-height:1.5">
-      We'll email you the top 5 biggest discounts every time we refresh. Unsubscribe anytime.
-    </p>
-    <div class="form-group">
-      <label>Email address</label>
-      <input type="email" id="sub-modal-email" placeholder="name@example.com">
-    </div>
-    <div class="form-group">
-      <label>Name (optional)</label>
-      <input type="text" id="sub-modal-name" placeholder="Your name">
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeSubscribeModal()">Cancel</button>
-      <button class="btn-save" id="sub-modal-btn" onclick="submitSubscribe()">Subscribe</button>
-    </div>
-  </div>
-</div>
-
-<!-- Add Search Modal -->
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <h2 id="modal-title">Add a search</h2>
-    <div class="pat-notice" id="pat-notice" style="display:none">
-      To save searches back to the repo, enter your GitHub Personal Access Token in Settings first.
-    </div>
-    <div class="form-group">
-      <label>Label</label>
-      <input type="text" id="f-label" placeholder="Flights to Italy">
-    </div>
-    <div class="form-group">
-      <label>Category</label>
-      <select id="f-category">
-        <option value="travel">Travel</option>
-        <option value="electronics">Electronics</option>
-        <option value="apparel">Apparel</option>
-        <option value="games">Games</option>
-        <option value="software">Software</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Keywords (comma-separated)</label>
-      <input type="text" id="f-keywords" placeholder="italy, rome, milan">
-    </div>
-    <div class="form-group">
-      <label>Max price ($)</label>
-      <input type="number" id="f-maxprice" placeholder="5000">
-    </div>
-    <div class="form-group">
-      <label>Min discount (%)</label>
-      <input type="number" id="f-mindiscount" placeholder="0">
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" id="modal-save-btn" onclick="saveSearch()">Save search</button>
-    </div>
-    <input type="hidden" id="f-editing-id" value="">
-  </div>
-</div>
+<footer>
+  Brasfield Deals · Flight prices update daily · Oil data via EIA · Not financial advice
+</footer>
 
 <script>
-  const BASE = '';
-  // Cloudflare Worker endpoint that persists public subscriptions to the repo.
-  // Set this to your deployed Worker URL (see worker/README.md).
-  const SUBSCRIBE_API = 'https://deals-subscribe.jbrasfield.workers.dev';
+const BASE = '';
+let flightsData = [];
+let oilData = {};
+let sentimentData = {};
+let analysisData = {};
+let historyData = [];
+let activeCabin = 'business';
 
-  // Admin mode: client-side gate for management UI. Real protection is the PAT.
-  // Unlock by visiting <site>#admin ; lock with <site>#logout.
-  (function initAdmin() {
-    const h = (location.hash || '').toLowerCase();
-    if (h === '#admin') { localStorage.setItem('admin', '1'); history.replaceState(null, '', location.pathname); }
-    else if (h === '#logout') { localStorage.removeItem('admin'); history.replaceState(null, '', location.pathname); }
-    if (localStorage.getItem('admin') === '1') document.body.classList.add('admin');
-  })();
-  function isAdmin() { return localStorage.getItem('admin') === '1'; }
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
-  let allDeals = [];
-  let searchResults = [];
-  let searchDefs = [];
-  let subscribers = [];
-  let suggestions = [];
-  let activeCategory = localStorage.getItem('bd_category') || 'all';
-  let activeSearchId = null;
-  let activeSort = localStorage.getItem('bd_sort') || 'score';
-  let filterText = '';
+function fmt(n) {
+  if (n == null) return '—';
+  return '$' + Number(n).toLocaleString();
+}
 
-  async function loadAll() {
-    document.getElementById('main-content').innerHTML = '<div class="loading">Loading deals...</div>';
-    try {
-      const [elec, app, trav, gms, sw, srch, sugg, defs, subs] = await Promise.all([
-        fetch(BASE + 'output/electronics.json').then(r => r.json()),
-        fetch(BASE + 'output/apparel.json').then(r => r.json()),
-        fetch(BASE + 'output/travel.json').then(r => r.json()),
-        fetch(BASE + 'output/games.json').then(r => r.json()),
-        fetch(BASE + 'output/software.json').then(r => r.json()),
-        fetch(BASE + 'output/searches.json').then(r => r.json()),
-        fetch(BASE + 'output/suggestions.json').then(r => r.json()),
-        Promise.resolve({ searches: loadLocalSearches() }),
-        fetch(BASE + 'config/subscribers.json').then(r => r.json()).catch(() => ({ subscribers: [] })),
-      ]);
+function fmtChg(pct) {
+  if (pct == null) return '—';
+  const sign = pct > 0 ? '+' : '';
+  const cls = pct > 0 ? 'chg-up' : pct < 0 ? 'chg-down' : 'chg-flat';
+  return `<span class="${cls}">${sign}${pct.toFixed(1)}%</span>`;
+}
 
-      allDeals = [
-        ...(elec.deals || []),
-        ...(app.deals || []),
-        ...(trav.deals || []),
-        ...(gms.deals || []),
-        ...(sw.deals || []),
-      ];
-      searchResults = srch.results || [];
-      searchDefs = defs.searches || [];
-      subscribers = subs.subscribers || [];
-      suggestions = sugg.suggestions || [];
+function timeAgo(iso) {
+  if (!iso) return '';
+  const diff = Date.now() - new Date(iso).getTime();
+  const h = Math.floor(diff / 3600000);
+  if (h < 1) return 'just now';
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h/24)}d ago`;
+}
 
-      const latestDate = elec.generated_at || app.generated_at || trav.generated_at;
-      if (latestDate) {
-        const d = new Date(latestDate);
-        const diff = Math.round((Date.now() - d) / 60000);
-        const label = diff < 60 ? `${diff}m ago` : `${Math.round(diff/60)}h ago`;
-        document.getElementById('updated-label').textContent = `Updated ${label}`;
-      }
+async function loadAll() {
+  try {
+    const [fl, oil, sent, analysis, hist] = await Promise.all([
+      fetch(BASE + 'output/flights.json').then(r => r.json()).catch(() => ({ flights: [] })),
+      fetch(BASE + 'output/oil.json').then(r => r.json()).catch(() => ({})),
+      fetch(BASE + 'output/sentiment.json').then(r => r.json()).catch(() => ({})),
+      fetch(BASE + 'output/analysis.json').then(r => r.json()).catch(() => ({})),
+      fetch(BASE + 'output/history.json').then(r => r.json()).catch(() => []),
+    ]);
+    flightsData = fl.flights || [];
+    oilData = oil;
+    sentimentData = sent;
+    analysisData = analysis;
+    historyData = Array.isArray(hist) ? hist : [];
 
-      document.getElementById('stat-total').textContent = allDeals.length;
-      document.getElementById('stat-suggestions').textContent = suggestions.length;
-
-      renderSearchList();
-      renderMain();
-    } catch(e) {
-      document.getElementById('main-content').innerHTML = `<div class="empty">Could not load deals. Run the pipeline first.<br><small>${e.message}</small></div>`;
-    }
+    const ts = fl.generated_at || analysis.generated_at;
+    document.getElementById('last-updated').textContent = ts ? 'Updated ' + timeAgo(ts) : '';
+    render();
+  } catch(e) {
+    document.getElementById('page').innerHTML = `<div class="no-data"><h2>Could not load data</h2><p>${esc(e.message)}</p></div>`;
   }
+}
 
-  function searchList() {
-    // Prefer the editable definitions; fall back to pipeline results.
-    if (searchDefs.length) {
-      return searchDefs.map(def => {
-        const res = searchResults.find(r => r.search_id === def.id);
-        return { id: def.id, label: def.label, matches: res ? res.matches : [] };
-      });
-    }
-    return searchResults.map(r => ({ id: r.search_id, label: r.label, matches: r.matches }));
-  }
+function setBestPrice() {
+  const cabin = activeCabin;
+  const filtered = flightsData.filter(f => f.cabin === cabin);
+  if (!filtered.length) return null;
+  return filtered.reduce((best, f) => (!best || f.price < best.price) ? f : best, null);
+}
 
-  function renderSearchList() {
-    const list = document.getElementById('search-list');
-    list.innerHTML = searchList().map(s => `
-      <div class="search-item ${activeSearchId === s.id ? 'active' : ''}" onclick="selectSearch('${s.id}')">
-        <div class="search-item-label">${esc(s.label)}</div>
-        <div class="search-item-sub">${s.matches.length} match${s.matches.length !== 1 ? 'es' : ''}</div>
+function render() {
+  const best = setBestPrice();
+  const page = document.getElementById('page');
+
+  // Hero
+  const heroPrice = best ? fmt(best.price) : '—';
+  const heroMeta = best
+    ? `${best.cabin === 'business' ? 'Business' : 'Premium Economy'} · ${best.route_label} · ${best.outbound_date} – ${best.return_date} · via ${esc(best.airline)}`
+    : 'No data yet — pipeline runs daily at 8am UTC';
+
+  // Signal
+  const rec = analysisData.recommendation || 'neutral';
+  const signalIcon = rec === 'buy_now' ? '🟢' : rec === 'wait' ? '🟡' : '⚪';
+  const signalLabel = rec === 'buy_now' ? 'Buy Now' : rec === 'wait' ? 'Wait' : 'Monitor';
+  const signalReason = analysisData.reason || 'Collecting data — check back tomorrow.';
+
+  page.innerHTML = `
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-route">✈ New York → Milan · June & July 2027</div>
+      <div class="hero-price">${heroPrice} <span>/ person</span></div>
+      <div class="hero-meta">${heroMeta}</div>
+      <div class="hero-pills">
+        <button class="cabin-pill ${activeCabin === 'business' ? 'active' : ''}" onclick="setCabin('business')">Business Class</button>
+        <button class="cabin-pill ${activeCabin === 'premium_economy' ? 'active' : ''}" onclick="setCabin('premium_economy')">Premium Economy</button>
       </div>
-    `).join('');
-  }
+    </div>
 
-  function selectSearch(id) {
-    activeSearchId = id;
-    activeCategory = 'searches';
-    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-    document.querySelector('.pill[data-cat="searches"]').classList.add('active');
-    document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
-    document.querySelector('.mobile-tab[data-cat="searches"]').classList.add('active');
-    renderSearchList();
-    renderMain();
-  }
+    <!-- SIGNAL BANNER -->
+    <div class="signal-banner ${rec}">
+      <div class="signal-icon">${signalIcon}</div>
+      <div>
+        <div class="signal-label">${signalLabel}</div>
+        <div class="signal-reason">${esc(signalReason)}</div>
+      </div>
+    </div>
 
-  function renderMain() {
-    const container = document.getElementById('main-content');
+    <!-- PRICE ALERT -->
+    <div class="alert-box">
+      <h3>Price Alert</h3>
+      <div class="alert-row">
+        <input class="alert-input" type="number" id="alert-price" placeholder="Target price $" value="${localStorage.getItem('bd_alert_price') || ''}">
+        <button class="btn-gold" onclick="saveAlert()">Set Alert</button>
+      </div>
+      <div class="alert-status" id="alert-status">${renderAlertStatus(best)}</div>
+    </div>
 
-    if (activeCategory === 'settings') {
-      if (!isAdmin()) { setCategory('all'); return; }
-      container.innerHTML = renderSettings();
-      return;
-    }
+    <!-- TOP ROW: Price history + Oil -->
+    <div class="grid-2">
+      ${renderChartCard()}
+      ${renderOilCard()}
+    </div>
 
-    let html = '';
+    <!-- SECOND ROW: Routes + Month comparison + Sentiment -->
+    <div class="grid-3">
+      ${renderRoutesCard()}
+      ${renderMonthCard()}
+      ${renderSentimentCard()}
+    </div>
 
-    if (activeCategory === 'suggestions') {
-      html += renderSuggestions(sortDeals(suggestions));
-      container.innerHTML = html;
-      return;
-    }
+    <!-- PRICE TABLE -->
+    ${renderPriceTable()}
+  `;
 
-    if (activeCategory === 'searches') {
-      const list = searchList();
-      if (activeSearchId) {
-        const s = list.find(x => x.id === activeSearchId);
-        const def = searchDefs.find(d => d.id === activeSearchId);
-        if (s) {
-          html += `<div class="search-detail-head">
-            <div class="section-title" style="margin:0">${esc(s.label)} — ${s.matches.length} match${s.matches.length !== 1 ? 'es' : ''}</div>
-            <div class="search-actions">
-              <button class="btn-mini" onclick="openModal('${s.id}')">Edit</button>
-              <button class="btn-mini btn-mini-danger" onclick="deleteSearch('${s.id}')">Delete</button>
-            </div>
-          </div>`;
-          if (def) html += renderSearchMeta(def);
-          html += sortBar();
-          html += renderDealList(sortDeals(filterDeals(s.matches)));
-        }
-      } else {
-        if (list.length === 0) {
-          html = '<div class="empty">No searches yet. Add one to get started.</div>';
-        } else {
-          html += `<div class="section-title">My searches</div>`;
-          list.forEach(s => {
-            html += `<div class="search-overview">
-              <div class="search-overview-head">
-                <div class="search-overview-label" onclick="selectSearch('${s.id}')">${esc(s.label)}
-                  <span class="search-overview-count">${s.matches.length} match${s.matches.length !== 1 ? 'es' : ''}</span>
-                </div>
-                <div class="search-actions">
-                  <button class="btn-mini" onclick="openModal('${s.id}')">Edit</button>
-                  <button class="btn-mini btn-mini-danger" onclick="deleteSearch('${s.id}')">Delete</button>
-                </div>
-              </div>`;
-            html += renderDealList(sortDeals(s.matches).slice(0, 3));
-            html += `</div>`;
-          });
-        }
-      }
-      container.innerHTML = html;
-      return;
-    }
+  drawChart();
+}
 
-    if (suggestions.length > 0) {
-      html += `<div class="section-title">Suggestions for you</div>`;
-      html += renderDealList(suggestions.slice(0, 3), true);
-    }
+function renderAlertStatus(best) {
+  const target = parseFloat(localStorage.getItem('bd_alert_price'));
+  if (!target) return 'Set a target price and we\'ll highlight when a fare drops below it.';
+  if (!best) return `Alert set for ${fmt(target)}.`;
+  if (best.price <= target) return `🔔 Current best (${fmt(best.price)}) is AT or BELOW your target of ${fmt(target)}!`;
+  return `Current best is ${fmt(best.price)}. Alert triggers below ${fmt(target)}.`;
+}
 
-    const filtered = activeCategory === 'all'
-      ? allDeals
-      : allDeals.filter(d => d.category === activeCategory);
+function saveAlert() {
+  const val = document.getElementById('alert-price').value;
+  localStorage.setItem('bd_alert_price', val);
+  const best = setBestPrice();
+  document.getElementById('alert-status').textContent = val
+    ? renderAlertStatus(best).replace(/<[^>]*>/g,'')
+    : 'Alert cleared.';
+}
 
-    if (filtered.length > 0) {
-      html += `<div class="section-title">${activeCategory === 'all' ? 'All deals' : cap(activeCategory) + ' deals'}</div>`;
-      html += sortBar();
-      const shown = sortDeals(filterDeals(filtered));
-      html += renderDealList(shown.slice(0, 30));
-    } else {
-      html += '<div class="empty">No deals found. Try refreshing.</div>';
-    }
-
-    container.innerHTML = html;
-  }
-
-  function filterDeals(deals) {
-    const q = filterText.trim().toLowerCase();
-    if (!q) return deals;
-    return deals.filter(d =>
-      (d.title || '').toLowerCase().includes(q) ||
-      (d.source || '').toLowerCase().includes(q)
-    );
-  }
-
-  function onFilterInput(v) {
-    filterText = v;
-    renderMain();
-    const el = document.getElementById('filter-input');
-    if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
-  }
-
-  function sortDeals(deals) {
-    const d = [...deals];
-    switch (activeSort) {
-      case 'discount': return d.sort((a,b) => (b.discount_pct||0) - (a.discount_pct||0));
-      case 'recent':   return d.sort((a,b) => new Date(b.posted_at) - new Date(a.posted_at));
-      case 'price_asc': return d.filter(x=>x.price!=null).sort((a,b)=>a.price-b.price)
-                               .concat(d.filter(x=>x.price==null));
-      case 'price_desc': return d.filter(x=>x.price!=null).sort((a,b)=>b.price-a.price)
-                                .concat(d.filter(x=>x.price==null));
-      case 'votes':    return d.sort((a,b) => (b.votes||0) - (a.votes||0));
-      default:         return d.sort((a,b) => (b.score||0) - (a.score||0));
-    }
-  }
-
-  function sortBar() {
-    return `<div class="sort-bar">
-      <input type="text" class="filter-input" id="filter-input" placeholder="Filter deals..."
-             value="${filterText.replace(/"/g, '&quot;')}" oninput="onFilterInput(this.value)">
-      <label for="sort-select">Sort by</label>
-      <select class="sort-select" id="sort-select" onchange="activeSort=this.value;localStorage.setItem('bd_sort',this.value);renderMain()">
-        <option value="score"    ${activeSort==='score'    ?'selected':''}>Best score</option>
-        <option value="discount" ${activeSort==='discount' ?'selected':''}>Greatest discount</option>
-        <option value="recent"   ${activeSort==='recent'   ?'selected':''}>Most recent</option>
-        <option value="votes"    ${activeSort==='votes'    ?'selected':''}>Most upvoted</option>
-        <option value="price_asc"  ${activeSort==='price_asc'  ?'selected':''}>Price: low to high</option>
-        <option value="price_desc" ${activeSort==='price_desc' ?'selected':''}>Price: high to low</option>
-      </select>
+function renderChartCard() {
+  const hasHistory = historyData.some(e => e.cabin === activeCabin);
+  return `
+    <div class="card">
+      <div class="card-title">Price History · ${activeCabin === 'business' ? 'Business' : 'Premium Economy'}</div>
+      ${hasHistory
+        ? `<div class="chart-wrap"><canvas id="price-chart"></canvas></div>
+           <div class="chart-legend">
+             <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>June 2027</div>
+             <div class="legend-item"><div class="legend-dot" style="background:#7ab0ff"></div>July 2027</div>
+           </div>`
+        : `<div style="padding:40px 0;text-align:center;color:var(--muted);font-size:13px">
+             History builds as the pipeline runs daily.<br>Check back tomorrow.
+           </div>`}
     </div>`;
+}
+
+function renderOilCard() {
+  const price = oilData.current_price;
+  return `
+    <div class="card">
+      <div class="card-title">WTI Crude Oil · $/barrel</div>
+      ${price ? `
+        <div class="oil-price">${price.toFixed(2)}<span class="oil-unit">$/bbl</span></div>
+        <div class="oil-change">
+          <span>Week: ${fmtChg(oilData.week_change_pct)}</span>
+          <span>Month: ${fmtChg(oilData.month_change_pct)}</span>
+          <span>Year: ${fmtChg(oilData.year_change_pct)}</span>
+        </div>
+        <div style="margin-top:14px;font-size:12px;color:var(--muted);line-height:1.6">
+          Oil prices are a leading indicator for jet fuel costs and airline fuel surcharges.
+          A sustained rise of 10%+ typically flows into ticket prices within 4–8 weeks.
+        </div>
+      ` : `<div style="padding:32px 0;text-align:center;color:var(--muted)">No oil data yet</div>`}
+    </div>`;
+}
+
+function renderRoutesCard() {
+  const cabin = activeCabin;
+  const routes = {};
+  for (const f of flightsData.filter(f => f.cabin === cabin)) {
+    const key = `${f.origin}-${f.dest}`;
+    if (!routes[key] || f.price < routes[key].price) routes[key] = f;
   }
-
-  function renderDealList(deals, isSuggestion = false) {
-    if (!deals || deals.length === 0) {
-      return '<div class="empty">No matches found.</div>';
-    }
-    return `<div class="deals-list">${deals.map(d => renderDeal(d, isSuggestion || d.why)).join('')}</div>`;
-  }
-
-  function renderDeal(deal, isSuggestion) {
-    const disc = deal.discount_pct ? Math.round(deal.discount_pct) : 0;
-    const price = deal.price != null ? `$${Number(deal.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : '';
-    const orig = deal.original_price ? `$${Number(deal.original_price).toLocaleString()}` : '';
-    const source = (deal.source || '').replace('reddit/r/', 'r/');
-    const ago = timeAgo(deal.posted_at);
-
-    return `
-      <div class="deal-card ${isSuggestion ? 'suggestion' : ''}">
-        ${deal.image_url ? `<img class="deal-thumb" src="${esc(deal.image_url)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
-        <div style="flex:1">
-          <div class="deal-meta">
-            ${isSuggestion ? '<span class="badge badge-gold">&#9733; Top pick</span>' : ''}
-            ${disc > 0 ? `<span class="badge badge-green">${disc}% off</span>` : ''}
-            ${source ? `<span class="badge badge-source">${source}</span>` : ''}
-            ${ago ? `<span style="font-size:11px;color:var(--text-muted)">${ago}</span>` : ''}
+  const routeList = Object.values(routes).sort((a,b) => a.price - b.price);
+  return `
+    <div class="card">
+      <div class="card-title">Best by Route · ${cabin === 'business' ? 'Business' : 'Premium Economy'}</div>
+      ${routeList.length ? routeList.map((r, i) => `
+        <div class="route-card">
+          <div class="route-airports">
+            ${esc(r.origin)} <span class="route-arrow">→</span> ${esc(r.dest)}
+            ${i === 0 ? '<span class="month-tag tag-best">Cheapest</span>' : ''}
           </div>
-          <div class="deal-title">${esc(deal.title)}</div>
-          ${orig ? `<div class="deal-sub">Was ${orig}${deal.votes ? ` · ${deal.votes} upvotes` : ''}</div>` : (deal.votes ? `<div class="deal-sub">${deal.votes} upvotes</div>` : '')}
-          ${deal.why ? `<div class="deal-why">${esc(deal.why)}</div>` : ''}
+          <div class="route-price">${fmt(r.price)}</div>
+          <div class="route-meta">${esc(r.airline)} · ${r.outbound_date}</div>
         </div>
-        <div class="deal-right">
-          ${price ? `<div class="deal-price">${price}</div>` : ''}
-          ${orig ? `<div class="deal-orig">${orig}</div>` : ''}
-          ${deal.url ? `<a href="${esc(deal.url)}" target="_blank" rel="noopener" class="deal-link">${esc(source)} ↗</a>` : ''}
-        </div>
-      </div>
-    `;
+      `).join('') : '<div style="padding:24px 0;text-align:center;color:var(--muted)">No data yet</div>'}
+    </div>`;
+}
+
+function renderMonthCard() {
+  const cabin = activeCabin;
+  const byMonth = {};
+  for (const f of flightsData.filter(f => f.cabin === cabin)) {
+    if (!byMonth[f.month] || f.price < byMonth[f.month].price) byMonth[f.month] = f;
   }
+  const june = byMonth['june'];
+  const july = byMonth['july'];
+  const bestMonth = analysisData.best_month;
+  const savings = analysisData.month_savings;
 
-  function renderSuggestions(list) {
-    return `<div class="section-title">Suggestions for you</div>${renderDealList(list, true)}`;
-  }
-
-  function renderSettings() {
-    const pat = localStorage.getItem('gh_pat') || '';
-    const rows = subscribers.length ? subscribers.map((s, i) => `
-      <div class="sub-row">
-        <div class="sub-info">
-          <div class="sub-email ${s.active ? '' : 'sub-inactive'}">${esc(s.email)}</div>
-          ${s.name ? `<div class="sub-name">${esc(s.name)}</div>` : ''}
-        </div>
-        <div class="search-actions">
-          <button class="btn-mini" onclick="toggleSubscriber(${i})">${s.active ? 'Pause' : 'Resume'}</button>
-          <button class="btn-mini btn-mini-danger" onclick="unsubscribe(${i})">Remove</button>
-        </div>
-      </div>`).join('') : '<div class="empty" style="padding:16px 0">No subscribers yet.</div>';
-
-    return `
-      <div class="section-title">Settings</div>
-      <div style="max-width:520px">
-
-        <div class="settings-card">
-          <h3 class="settings-h3">Email subscribers</h3>
-          <p class="settings-p">People here get an email with the top 5 discounts each pipeline run. Paused subscribers stay on the list but don't receive emails.</p>
-          <div class="sub-list">${rows}</div>
-          <div class="sub-add">
-            <input type="email" id="sub-email" placeholder="name@example.com" class="settings-input" style="flex:2">
-            <input type="text" id="sub-name" placeholder="Name (optional)" class="settings-input" style="flex:1">
-            <button class="btn-save settings-btn" onclick="subscribe()">Subscribe</button>
+  return `
+    <div class="card">
+      <div class="card-title">June vs July 2027</div>
+      ${june || july ? `
+        <div class="month-row">
+          <div>
+            <div class="month-name">June 2027</div>
+            ${june ? `<div class="route-meta">${esc(june.airline)}</div>` : ''}
           </div>
-          <p class="settings-note">Note: this list lives in the public repo, so emails are publicly visible. Sending also requires SMTP secrets configured in GitHub Actions.</p>
+          <div style="text-align:right">
+            <div class="month-price">${june ? fmt(june.price) : '—'}</div>
+            ${bestMonth === 'june' ? '<span class="month-tag tag-best">Better deal</span>' : ''}
+          </div>
         </div>
-
-        <div class="settings-card">
-          <h3 class="settings-h3">GitHub Personal Access Token</h3>
-          <p class="settings-p">Required to save searches and subscribers back to the repo. Generate a token with <code>repo</code> scope at github.com/settings/tokens.</p>
-          <input type="password" id="pat-input" value="${esc(pat)}" placeholder="ghp_..." class="settings-input" style="width:100%">
-          <button class="btn-save settings-btn" style="margin-top:10px" onclick="savePAT()">Save token</button>
+        <div class="month-row">
+          <div>
+            <div class="month-name">July 2027</div>
+            ${july ? `<div class="route-meta">${esc(july.airline)}</div>` : ''}
+          </div>
+          <div style="text-align:right">
+            <div class="month-price">${july ? fmt(july.price) : '—'}</div>
+            ${bestMonth === 'july' ? '<span class="month-tag tag-best">Better deal</span>' : ''}
+          </div>
         </div>
+        ${savings > 0 ? `<div style="margin-top:14px;font-size:12px;color:var(--muted)">
+          ${bestMonth === 'june' ? 'June' : 'July'} saves you ${fmt(savings)} per person.
+        </div>` : ''}
+      ` : '<div style="padding:24px 0;text-align:center;color:var(--muted)">No data yet</div>'}
+    </div>`;
+}
 
+function renderSentimentCard() {
+  const score = sentimentData.score ?? 0;
+  const signal = sentimentData.signal || 'neutral';
+  const pct = Math.round((score + 1) / 2 * 100);
+  const label = signal === 'bullish_oil' ? 'Bullish Oil — Buy Soon'
+              : signal === 'bearish_oil' ? 'Bearish Oil — Prices May Drop'
+              : 'Neutral';
+  const color = signal === 'bullish_oil' ? 'var(--red)' : signal === 'bearish_oil' ? 'var(--green)' : 'var(--muted)';
+  const headlines = sentimentData.top_headlines || [];
+
+  return `
+    <div class="card">
+      <div class="card-title">Oil & Aviation Sentiment</div>
+      <div class="sentiment-score" style="color:${color}">${score >= 0 ? '+' : ''}${score.toFixed(2)}</div>
+      <div class="sentiment-label" style="color:${color}">${esc(label)}</div>
+      <div class="sentiment-bar">
+        <div class="sentiment-marker" style="left:${pct}%"></div>
       </div>
-    `;
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+        <span>Bearish oil (wait)</span><span>Bullish oil (buy)</span>
+      </div>
+      ${headlines.length ? `
+        <div class="sentiment-headlines">
+          ${headlines.map(h => `
+            <div class="headline-item ${h.score > 0 ? 'hl-bullish' : 'hl-bearish'}">
+              ${esc(h.headline)}
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+    </div>`;
+}
+
+function renderPriceTable() {
+  const rows = flightsData.slice().sort((a,b) => a.price - b.price);
+  if (!rows.length) return '';
+  const bestPrice = rows[0].price;
+  return `
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-title">All Prices Found Today</div>
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Route</th>
+            <th>Cabin</th>
+            <th>Month</th>
+            <th>Airline</th>
+            <th>Dates</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(f => `
+            <tr>
+              <td>${esc(f.origin)} → ${esc(f.dest)}</td>
+              <td><span class="badge-cabin ${f.cabin === 'business' ? 'badge-biz' : 'badge-pe'}">${f.cabin === 'business' ? 'Business' : 'Prem Eco'}</span></td>
+              <td style="text-transform:capitalize">${esc(f.month)}</td>
+              <td>${esc(f.airline)}</td>
+              <td style="font-size:11px;color:var(--muted)">${esc(f.outbound_date)}</td>
+              <td><span class="price-val ${f.price === bestPrice ? 'badge-cabin badge-best' : ''}">${fmt(f.price)}</span></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function drawChart() {
+  const canvas = document.getElementById('price-chart');
+  if (!canvas) return;
+  const cabin = activeCabin;
+
+  const juneData = historyData.filter(e => e.cabin === cabin && e.month === 'june' && e.price).sort((a,b) => a.date > b.date ? 1 : -1);
+  const julyData = historyData.filter(e => e.cabin === cabin && e.month === 'july' && e.price).sort((a,b) => a.date > b.date ? 1 : -1);
+  if (!juneData.length && !julyData.length) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  const wrap = canvas.parentElement;
+  canvas.width = wrap.clientWidth * dpr;
+  canvas.height = wrap.clientHeight * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  const pad = { top: 10, right: 10, bottom: 24, left: 56 };
+  const cW = W - pad.left - pad.right;
+  const cH = H - pad.top - pad.bottom;
+
+  const allPrices = [...juneData, ...julyData].map(e => e.price);
+  const minP = Math.min(...allPrices) * 0.97;
+  const maxP = Math.max(...allPrices) * 1.03;
+
+  const allDates = [...new Set([...juneData, ...julyData].map(e => e.date))].sort();
+  const n = allDates.length;
+  if (n < 1) return;
+
+  function xPos(date) { const i = allDates.indexOf(date); return pad.left + (i / Math.max(n-1,1)) * cW; }
+  function yPos(p) { return pad.top + (1 - (p - minP) / (maxP - minP)) * cH; }
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + (i / 4) * cH;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+    const price = maxP - (i / 4) * (maxP - minP);
+    ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText('$' + Math.round(price / 100) * 100, pad.left - 4, y + 4);
   }
 
-  function savePAT() {
-    const val = document.getElementById('pat-input').value.trim();
-    if (val) localStorage.setItem('gh_pat', val);
-    else localStorage.removeItem('gh_pat');
-    alert('Saved.');
-  }
-
-  function timeAgo(iso) {
-    if (!iso) return '';
-    try {
-      const diff = (Date.now() - new Date(iso)) / 60000;
-      if (diff < 60) return `${Math.round(diff)}m ago`;
-      if (diff < 1440) return `${Math.round(diff/60)}h ago`;
-      return `${Math.round(diff/1440)}d ago`;
-    } catch { return ''; }
-  }
-
-  function esc(s) {
-    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-
-  function setCategory(cat) {
-    activeCategory = cat;
-    if (!['settings'].includes(cat)) localStorage.setItem('bd_category', cat);
-    if (cat !== 'searches') activeSearchId = null;
-    document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.cat === cat));
-    document.querySelectorAll('.mobile-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
-    renderSearchList();
-    renderMain();
-  }
-
-  document.querySelectorAll('.pill').forEach(p => p.addEventListener('click', () => setCategory(p.dataset.cat)));
-  document.querySelectorAll('.mobile-tab').forEach(t => t.addEventListener('click', () => setCategory(t.dataset.cat)));
-
-  function renderSearchMeta(def) {
-    const parts = [];
-    parts.push(`<span class="meta-chip">${esc(cap(def.category || 'any'))}</span>`);
-    if (def.keywords && def.keywords.length) parts.push(`<span class="meta-chip">${def.keywords.map(esc).join(', ')}</span>`);
-    if (def.max_price) parts.push(`<span class="meta-chip">≤ $${Number(def.max_price).toLocaleString()}</span>`);
-    if (def.min_discount_pct) parts.push(`<span class="meta-chip">≥ ${def.min_discount_pct}% off</span>`);
-    return `<div class="search-meta">${parts.join('')}</div>`;
-  }
-
-  function openModal(id) {
-    const pat = localStorage.getItem('gh_pat');
-    document.getElementById('pat-notice').style.display = pat ? 'none' : 'block';
-
-    const editing = id ? searchDefs.find(d => d.id === id) : null;
-    document.getElementById('f-editing-id').value = editing ? editing.id : '';
-    document.getElementById('modal-title').textContent = editing ? 'Edit search' : 'Add a search';
-    document.getElementById('modal-save-btn').textContent = editing ? 'Update search' : 'Save search';
-
-    document.getElementById('f-label').value = editing ? editing.label : '';
-    document.getElementById('f-category').value = editing ? (editing.category || 'travel') : 'travel';
-    document.getElementById('f-keywords').value = editing ? (editing.keywords || []).join(', ') : '';
-    document.getElementById('f-maxprice').value = editing && editing.max_price != null ? editing.max_price : '';
-    document.getElementById('f-mindiscount').value = editing && editing.min_discount_pct != null ? editing.min_discount_pct : '';
-
-    document.getElementById('modal').classList.add('open');
-  }
-  function closeModal() { document.getElementById('modal').classList.remove('open'); }
-  document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
-
-  // Searches live in localStorage — no PAT or GitHub API needed.
-  const LS_SEARCHES = 'bd_searches';
-  function loadLocalSearches() {
-    try { return JSON.parse(localStorage.getItem(LS_SEARCHES) || '[]'); } catch { return []; }
-  }
-  function saveLocalSearches(searches) {
-    localStorage.setItem(LS_SEARCHES, JSON.stringify(searches));
-    searchDefs = searches;
-  }
-  function writeSearches(mutator) {
-    const updated = mutator([...loadLocalSearches()]);
-    saveLocalSearches(updated);
-    return true;
-  }
-
-  function saveSearch() {
-    const editingId = document.getElementById('f-editing-id').value;
-    const label = document.getElementById('f-label').value.trim();
-    const category = document.getElementById('f-category').value;
-    const keywords = document.getElementById('f-keywords').value.split(',').map(k => k.trim()).filter(Boolean);
-    const maxPrice = parseFloat(document.getElementById('f-maxprice').value) || null;
-    const minDiscount = parseFloat(document.getElementById('f-mindiscount').value) || 0;
-
-    if (!label || keywords.length === 0) {
-      alert('Label and at least one keyword are required.');
-      return;
-    }
-
-    const id = editingId || label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    const search = { id, label, category, keywords, max_price: maxPrice, min_discount_pct: minDiscount };
-
-    writeSearches(searches => {
-      const i = searches.findIndex(s => s.id === id);
-      if (i >= 0) searches[i] = search; else searches.push(search);
-      return searches;
+  function drawLine(data, color) {
+    if (data.length < 1) return;
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    data.forEach((e, i) => {
+      const x = xPos(e.date), y = yPos(e.price);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
-    closeModal();
-    if (activeSearchId === id || !editingId) activeSearchId = id;
-    renderSearchList();
-    renderMain();
+    ctx.stroke();
+    // Dots
+    ctx.fillStyle = color;
+    data.forEach(e => {
+      ctx.beginPath(); ctx.arc(xPos(e.date), yPos(e.price), 3, 0, Math.PI*2); ctx.fill();
+    });
   }
 
-  async function deleteSearch(id) {
-    const def = searchDefs.find(d => d.id === id);
-    const label = def ? def.label : id;
-    if (!confirm(`Delete search "${label}"? This can't be undone.`)) return;
+  drawLine(juneData, '#C9A44A');
+  drawLine(julyData, '#7ab0ff');
+}
 
-    writeSearches(searches => searches.filter(s => s.id !== id));
-    {
-      searchResults = searchResults.filter(r => r.search_id !== id);
-      if (activeSearchId === id) activeSearchId = null;
-      renderSearchList();
-      renderMain();
-    }
-  }
+function setCabin(cabin) {
+  activeCabin = cabin;
+  render();
+}
 
-  // Generic CRUD writer for config/subscribers.json
-  async function writeSubscribers(mutator, message) {
-    const pat = localStorage.getItem('gh_pat');
-    if (!pat) {
-      alert('Enter your GitHub PAT in Settings to manage subscribers.');
-      return false;
-    }
-    const owner = 'jambione', repo = 'deal-finder', path = 'config/subscribers.json';
-    try {
-      const fileResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' }
-      });
-      if (!fileResp.ok) throw new Error(`read failed (${fileResp.status})`);
-      const fileData = await fileResp.json();
-      const current = JSON.parse(atob(fileData.content.replace(/\n/g, '')));
-      current.subscribers = mutator([...(current.subscribers || [])]);
-
-      const putResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-        method: 'PUT',
-        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, content: btoa(JSON.stringify(current, null, 2)), sha: fileData.sha }),
-      });
-      if (!putResp.ok) throw new Error(`write failed (${putResp.status})`);
-      subscribers = current.subscribers;
-      return true;
-    } catch (e) {
-      alert(`Failed: ${e.message}`);
-      return false;
-    }
-  }
-
-  async function subscribe() {
-    const email = document.getElementById('sub-email').value.trim();
-    const name = document.getElementById('sub-name').value.trim();
-    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      alert('Enter a valid email address.');
-      return;
-    }
-    if (subscribers.some(s => s.email.toLowerCase() === email.toLowerCase())) {
-      alert('That email is already subscribed.');
-      return;
-    }
-    const ok = await writeSubscribers(subs => {
-      subs.push({ email, name, active: true });
-      return subs;
-    }, `chore: subscribe ${email}`);
-    if (ok) { alert(`Subscribed ${email}. Emails start on the next pipeline run.`); renderMain(); }
-  }
-
-  async function unsubscribe(i) {
-    const sub = subscribers[i];
-    if (!sub || !confirm(`Remove ${sub.email} from the list?`)) return;
-    const ok = await writeSubscribers(subs => subs.filter(s => s.email.toLowerCase() !== sub.email.toLowerCase()),
-      `chore: unsubscribe ${sub.email}`);
-    if (ok) renderMain();
-  }
-
-  async function toggleSubscriber(i) {
-    const sub = subscribers[i];
-    if (!sub) return;
-    const ok = await writeSubscribers(subs => subs.map(s =>
-      s.email.toLowerCase() === sub.email.toLowerCase() ? { ...s, active: !s.active } : s),
-      `chore: ${sub.active ? 'pause' : 'resume'} ${sub.email}`);
-    if (ok) renderMain();
-  }
-
-  async function runNow() {
-    const pat = localStorage.getItem('gh_pat');
-    if (!pat) {
-      alert('Enter your GitHub PAT in Settings to trigger a run.');
-      setCategory('settings');
-      return;
-    }
-    const btn = document.getElementById('run-now-btn');
-    const owner = 'jambione', repo = 'deal-finder', workflow = 'fetch-deals.yml';
-    try {
-      if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
-      const resp = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow}/dispatches`, {
-        method: 'POST',
-        headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ref: 'main' }),
-      });
-      if (resp.status === 204) {
-        alert('Pipeline started. It usually takes 1-2 minutes. Hit Refresh once it finishes to load the new deals.');
-      } else {
-        const txt = await resp.text();
-        throw new Error(`${resp.status} ${txt}`);
-      }
-    } catch (e) {
-      alert(`Failed to start run: ${e.message}`);
-    } finally {
-      if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
-    }
-  }
-
-  // Public subscribe (writes via the Cloudflare Worker, no token in the browser)
-  function openSubscribeModal() {
-    document.getElementById('sub-modal-email').value = '';
-    document.getElementById('sub-modal-name').value = '';
-    document.getElementById('subscribe-modal').classList.add('open');
-  }
-  function closeSubscribeModal() { document.getElementById('subscribe-modal').classList.remove('open'); }
-  document.getElementById('subscribe-modal').addEventListener('click', e => {
-    if (e.target === document.getElementById('subscribe-modal')) closeSubscribeModal();
-  });
-
-  async function submitSubscribe() {
-    const email = document.getElementById('sub-modal-email').value.trim();
-    const name = document.getElementById('sub-modal-name').value.trim();
-    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      alert('Please enter a valid email address.');
-      return;
-    }
-    const btn = document.getElementById('sub-modal-btn');
-    try {
-      btn.disabled = true; btn.textContent = 'Subscribing...';
-      const resp = await fetch(`${SUBSCRIBE_API}/subscribe`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name }),
-      });
-      const data = await resp.json().catch(() => ({}));
-      if (resp.ok) {
-        closeSubscribeModal();
-        alert(data.message || `You're subscribed! You'll get the top deals by email.`);
-      } else {
-        throw new Error(data.error || `HTTP ${resp.status}`);
-      }
-    } catch (e) {
-      alert(`Could not subscribe: ${e.message}`);
-    } finally {
-      btn.disabled = false; btn.textContent = 'Subscribe';
-    }
-  }
-
-  loadAll();
+loadAll();
 </script>
 </body>
 </html>

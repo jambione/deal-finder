@@ -1,17 +1,6 @@
-"""Email the top 5 greatest discounts across all categories to subscribers.
-
-Runs after the deal pipeline. Reads output/*.json (the scored category files),
-ranks every deal by discount_pct, takes the top 5, and emails them.
-
-Skips silently if SMTP credentials are not configured, so local runs and
-unconfigured CI runs don't fail.
-
-Required env vars (set as GitHub Actions secrets):
-  SMTP_HOST      e.g. smtp.gmail.com
-  SMTP_PORT      e.g. 587
-  SMTP_USER      sending account username
-  SMTP_PASS      sending account password / app password
-  SMTP_FROM      From address (defaults to SMTP_USER)
+"""
+Email flight price alert to subscribers.
+Sends daily with best fares and buy/wait recommendation.
 """
 
 import json
@@ -25,12 +14,8 @@ BASE_DIR = os.path.join(os.path.dirname(__file__), "..")
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
 CONFIG_DIR = os.path.join(BASE_DIR, "config")
 SITE_URL = "https://deals.jbrasfield.com"
-
-CATEGORY_FILES = ["electronics", "apparel", "travel", "games", "software"]
 NAVY = "#1B2438"
 GOLD = "#C9A44A"
-TOP_N = 5
-MAX_PER_CATEGORY = 2
 
 
 def load_subscribers():
@@ -44,73 +29,51 @@ def load_subscribers():
         return []
 
 
-def load_top_deals():
-    deals = []
-    for cat in CATEGORY_FILES:
-        path = os.path.join(OUTPUT_DIR, f"{cat}.json")
+def load_data():
+    def read(name):
         try:
-            with open(path) as f:
-                data = json.load(f)
-            for d in data.get("deals", []):
-                d["category"] = d.get("category", cat)
-                deals.append(d)
+            with open(os.path.join(OUTPUT_DIR, name)) as f:
+                return json.load(f)
         except Exception:
-            continue
-    # Only deals with a real discount, ranked highest first
-    discounted = [d for d in deals if (d.get("discount_pct") or 0) > 0]
-    discounted.sort(key=lambda d: d.get("discount_pct", 0), reverse=True)
+            return {}
 
-    # Diversify: at most MAX_PER_CATEGORY so one franchise/category can't fill
-    # the whole list. Backfill from the remainder if we come up short.
-    picked, per_cat = [], {}
-    for d in discounted:
-        cat = d.get("category", "other")
-        if per_cat.get(cat, 0) >= MAX_PER_CATEGORY:
-            continue
-        picked.append(d)
-        per_cat[cat] = per_cat.get(cat, 0) + 1
-        if len(picked) >= TOP_N:
-            break
-    if len(picked) < TOP_N:
-        chosen = {id(d) for d in picked}
-        for d in discounted:
-            if id(d) not in chosen:
-                picked.append(d)
-                if len(picked) >= TOP_N:
-                    break
-    return picked[:TOP_N]
+    flights = read("flights.json").get("flights", [])
+    analysis = read("analysis.json")
+    oil = read("oil.json")
+    return flights, analysis, oil
 
 
-def _price(d):
-    p = d.get("price")
-    if p is None:
-        return ""
-    return f"${p:,.2f}"
+def build_email(flights, analysis, oil):
+    today = datetime.now(timezone.utc).strftime("%B %d, %Y")
+    rec = analysis.get("recommendation", "neutral")
+    reason = analysis.get("reason", "")
+    signal_color = "#27c56f" if rec == "buy_now" else "#f0b429" if rec == "wait" else "#aaa"
+    signal_label = "BUY NOW" if rec == "buy_now" else "WAIT" if rec == "wait" else "MONITOR"
 
+    biz = sorted([f for f in flights if f.get("cabin") == "business" and f.get("price")], key=lambda x: x["price"])
+    pe  = sorted([f for f in flights if f.get("cabin") == "premium_economy" and f.get("price")], key=lambda x: x["price"])
+    best_biz = biz[0] if biz else None
+    best_pe  = pe[0]  if pe  else None
 
-def build_html(top_deals):
-    rows = []
-    for i, d in enumerate(top_deals, 1):
-        disc = d.get("discount_pct", 0)
-        cat = (d.get("category") or "").title()
-        price = _price(d)
-        orig = d.get("original_price")
-        orig_html = (
-            f'<span style="text-decoration:line-through;color:#999;margin-left:6px;">${orig:,.2f}</span>'
-            if orig else ""
-        )
-        rows.append(f"""
+    def row(f, label):
+        if not f:
+            return f"<tr><td style='padding:12px 0;border-bottom:1px solid #eee;color:#999'>{label}: no data</td></tr>"
+        return f"""
         <tr>
           <td style="padding:14px 0;border-bottom:1px solid #eee;">
-            <div style="font-size:13px;color:{GOLD};font-weight:700;">#{i} · {disc}% OFF · {cat}</div>
-            <a href="{d.get('url', '#')}" style="font-size:16px;color:{NAVY};font-weight:600;text-decoration:none;">{d.get('title','')}</a>
-            <div style="margin-top:4px;font-size:14px;color:#333;">{price}{orig_html}
-              <span style="color:#888;margin-left:8px;">via {d.get('source','')}</span>
-            </div>
+            <div style="font-size:12px;color:{GOLD};font-weight:700;margin-bottom:4px">{label} · {f.get('route_label','')} · {f.get('month','').title()}</div>
+            <div style="font-size:24px;font-weight:800;color:{NAVY}">${f['price']:,.0f} <span style="font-size:14px;font-weight:400;color:#888">per person</span></div>
+            <div style="font-size:13px;color:#555;margin-top:4px">{f.get('airline','')} · Depart {f.get('outbound_date','')} · Return {f.get('return_date','')}</div>
           </td>
-        </tr>""")
+        </tr>"""
 
-    today = datetime.now(timezone.utc).strftime("%B %d, %Y")
+    oil_price = oil.get("current_price")
+    oil_chg = oil.get("month_change_pct")
+    oil_line = ""
+    if oil_price:
+        chg_str = f" ({'+' if oil_chg and oil_chg > 0 else ''}{oil_chg:.1f}% this month)" if oil_chg else ""
+        oil_line = f"<p style='font-size:12px;color:#888;margin:4px 0'>WTI Crude: ${oil_price:.2f}/bbl{chg_str}</p>"
+
     return f"""\
 <!DOCTYPE html>
 <html>
@@ -120,18 +83,27 @@ def build_html(top_deals):
       <table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;">
         <tr><td style="background:{NAVY};padding:20px 28px;">
           <span style="color:#fff;font-size:20px;font-weight:700;">Brasfield Deals</span>
-          <span style="color:{GOLD};font-size:13px;float:right;padding-top:6px;">Top 5 · {today}</span>
+          <span style="color:{GOLD};font-size:13px;float:right;padding-top:6px;">NYC→Milan · {today}</span>
         </td></tr>
-        <tr><td style="padding:8px 28px 0;">
-          <h2 style="color:{NAVY};font-size:18px;margin:18px 0 4px;">Today's biggest discounts</h2>
-          <table width="100%" cellpadding="0" cellspacing="0">{''.join(rows)}</table>
+        <tr><td style="padding:20px 28px 0;">
+          <div style="background:{signal_color}22;border:1px solid {signal_color}55;border-radius:8px;padding:12px 16px;margin-bottom:20px;">
+            <span style="color:{signal_color};font-weight:700;font-size:13px">{signal_label}</span>
+            <span style="color:#444;font-size:13px;margin-left:8px">{reason}</span>
+          </div>
+          <h2 style="color:{NAVY};font-size:16px;margin:0 0 4px">Today's Best Fares</h2>
+          <p style="font-size:12px;color:#888;margin:0 0 12px">JFK / EWR → Milan (MXP / LIN) · June &amp; July 2027</p>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            {row(best_biz, 'Business Class')}
+            {row(best_pe,  'Premium Economy')}
+          </table>
+          {oil_line}
         </td></tr>
         <tr><td style="padding:24px 28px;">
           <a href="{SITE_URL}" style="display:inline-block;background:{GOLD};color:{NAVY};font-weight:700;
-             text-decoration:none;padding:12px 22px;border-radius:8px;">See all deals →</a>
+             text-decoration:none;padding:12px 22px;border-radius:8px;">View full tracker →</a>
         </td></tr>
         <tr><td style="padding:0 28px 24px;color:#aaa;font-size:12px;">
-          You're receiving this because you subscribed to Brasfield Deals.
+          You're subscribed to Brasfield Deals flight alerts.
         </td></tr>
       </table>
     </td></tr>
@@ -145,9 +117,8 @@ def send_email(host, port, user, password, from_addr, to_addr, subject, html):
     msg["Subject"] = subject
     msg["From"] = from_addr
     msg["To"] = to_addr
-    msg.attach(MIMEText("Open in an HTML-capable client to view today's top deals.", "plain"))
+    msg.attach(MIMEText("Open in an HTML-capable client to view today's flight prices.", "plain"))
     msg.attach(MIMEText(html, "html"))
-
     with smtplib.SMTP(host, int(port), timeout=20) as server:
         server.starttls()
         server.login(user, password)
@@ -162,22 +133,25 @@ def main():
     from_addr = os.environ.get("SMTP_FROM", user)
 
     if not (host and user and password):
-        print("[notify] skipping — SMTP_HOST / SMTP_USER / SMTP_PASS not set")
+        print("[notify] skipping — SMTP not configured")
         return
 
     subscribers = load_subscribers()
     if not subscribers:
-        print("[notify] no active subscribers, nothing to send")
+        print("[notify] no active subscribers")
         return
 
-    top_deals = load_top_deals()
-    if not top_deals:
-        print("[notify] no discounted deals found, nothing to send")
+    flights, analysis, oil = load_data()
+    if not flights:
+        print("[notify] no flight data, skipping")
         return
 
-    html = build_html(top_deals)
-    top_disc = top_deals[0].get("discount_pct", 0)
-    subject = f"Brasfield Deals: today's top 5 (up to {top_disc}% off)"
+    html = build_email(flights, analysis, oil)
+    rec = analysis.get("recommendation", "monitor")
+    biz = sorted([f for f in flights if f.get("cabin") == "business" and f.get("price")], key=lambda x: x["price"])
+    best_price = biz[0]["price"] if biz else None
+    subject = (f"NYC→Milan: {'BUY NOW — ' if rec == 'buy_now' else ''}Business from ${best_price:,.0f}"
+               if best_price else "Brasfield Deals — NYC→Milan flight update")
 
     sent = 0
     for sub in subscribers:
