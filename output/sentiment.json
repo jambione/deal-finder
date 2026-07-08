@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-07-07T11:16:19.764561+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-07-08T10:27:37.748352+00:00",
+  "score": 0.032,
   "signal": "neutral",
   "headline_count": 31,
-  "top_headlines": []
+  "top_headlines": [
+    {
+      "headline": "Oil Surges After Trump Says US Ceasefire With Iran Is Over",
+      "score": 1
+    }
+  ]
 }
