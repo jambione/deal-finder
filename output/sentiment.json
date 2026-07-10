@@ -1,12 +1,7 @@
 {
-  "fetched_at": "2026-07-09T11:19:27.676486+00:00",
-  "score": 0.031,
+  "fetched_at": "2026-07-10T11:13:01.253378+00:00",
+  "score": 0.0,
   "signal": "neutral",
-  "headline_count": 32,
-  "top_headlines": [
-    {
-      "headline": "Oil Rally Cools as Traders Take Stock of Latest US-Iran Fighting",
-      "score": 1
-    }
-  ]
+  "headline_count": 30,
+  "top_headlines": []
 }
