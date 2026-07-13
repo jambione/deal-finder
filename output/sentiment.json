@@ -1,7 +1,16 @@
 {
-  "fetched_at": "2026-07-12T09:58:18.589077+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-07-13T11:22:09.897222+00:00",
+  "score": 0.069,
   "signal": "neutral",
-  "headline_count": 27,
-  "top_headlines": []
+  "headline_count": 29,
+  "top_headlines": [
+    {
+      "headline": "Chip Selloff Hits Stocks as Oil Gains Lift Yields: Markets Wrap",
+      "score": 1
+    },
+    {
+      "headline": "Oil Rises as Conflict Over Hormuz Escalates With Fresh Strikes",
+      "score": 1
+    }
+  ]
 }
