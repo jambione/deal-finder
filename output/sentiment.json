@@ -1,12 +1,7 @@
 {
-  "fetched_at": "2026-07-14T10:05:48.482596+00:00",
-  "score": 0.033,
+  "fetched_at": "2026-07-15T10:09:51.637841+00:00",
+  "score": 0.0,
   "signal": "neutral",
-  "headline_count": 30,
-  "top_headlines": [
-    {
-      "headline": "UK borrowing costs hit highest level since May as oil surges",
-      "score": 1
-    }
-  ]
+  "headline_count": 11,
+  "top_headlines": []
 }
