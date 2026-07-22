@@ -1,7 +1,16 @@
 {
-  "fetched_at": "2026-07-21T10:31:15.194459+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-07-22T10:37:52.769362+00:00",
+  "score": 0.062,
   "signal": "neutral",
-  "headline_count": 31,
-  "top_headlines": []
+  "headline_count": 32,
+  "top_headlines": [
+    {
+      "headline": "Oil rises past $95 after Trump threatens further Iran escalation",
+      "score": 1
+    },
+    {
+      "headline": "PHP/USD: Philippines Joins India in Stepping Currency Defense as Oil Rises",
+      "score": 1
+    }
+  ]
 }
