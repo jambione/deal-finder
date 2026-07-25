@@ -1,13 +1,26 @@
 {
-  "generated_at": "2026-07-24T10:32:00.197406+00:00",
+  "generated_at": "2026-07-25T10:01:26.155380+00:00",
   "recommendation": "neutral",
   "recommendation_score": 0,
   "reason": "No strong signal either way. Monitor daily and buy if prices drop below your target.",
-  "best_month": "july",
+  "best_month": "june",
   "month_savings": 0,
-  "oil_month_change_pct": -0.73,
-  "oil_week_change_pct": 11.78,
+  "oil_month_change_pct": 0,
+  "oil_week_change_pct": 0,
   "sentiment_signal": "neutral",
-  "signals": {},
-  "days_of_history": 0
+  "signals": {
+    "business_june": {
+      "current_price": 3171,
+      "avg_30d": 3296.0,
+      "trend_30d_pct": 17.4,
+      "vs_avg_pct": -3.8
+    },
+    "premium_economy_june": {
+      "current_price": 1428,
+      "avg_30d": 1653.0,
+      "trend_30d_pct": 0.0,
+      "vs_avg_pct": -13.6
+    }
+  },
+  "days_of_history": 1
 }

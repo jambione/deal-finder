@@ -1,4 +1,83 @@
 {
-  "generated_at": "2026-07-24T10:26:05.025839+00:00",
-  "flights": []
+  "generated_at": "2026-07-25T09:56:16.646223+00:00",
+  "flights": [
+    {
+      "origin": "JFK",
+      "dest": "MXP",
+      "route_label": "JFK \u2192 Milan Malpensa",
+      "cabin": "business",
+      "month": "june",
+      "price": 2700,
+      "airline": "Icelandair",
+      "duration_min": 2445,
+      "outbound_date": "2027-06-07",
+      "return_date": "2027-06-19",
+      "fetched_at": "2026-07-25T09:56:16.646244+00:00"
+    },
+    {
+      "origin": "JFK",
+      "dest": "MXP",
+      "route_label": "JFK \u2192 Milan Malpensa",
+      "cabin": "premium_economy",
+      "month": "june",
+      "price": 1428,
+      "airline": "Tap Air Portugal",
+      "duration_min": 740,
+      "outbound_date": "2027-06-07",
+      "return_date": "2027-06-19",
+      "fetched_at": "2026-07-25T09:56:16.646244+00:00"
+    },
+    {
+      "origin": "JFK",
+      "dest": "LIN",
+      "route_label": "JFK \u2192 Milan Linate",
+      "cabin": "business",
+      "month": "june",
+      "price": 4018,
+      "airline": "Virgin Atlantic",
+      "duration_min": 690,
+      "outbound_date": "2027-06-07",
+      "return_date": "2027-06-19",
+      "fetched_at": "2026-07-25T09:56:16.646244+00:00"
+    },
+    {
+      "origin": "JFK",
+      "dest": "LIN",
+      "route_label": "JFK \u2192 Milan Linate",
+      "cabin": "premium_economy",
+      "month": "june",
+      "price": 2102,
+      "airline": "ITA",
+      "duration_min": 665,
+      "outbound_date": "2027-06-07",
+      "return_date": "2027-06-19",
+      "fetched_at": "2026-07-25T09:56:16.646244+00:00"
+    },
+    {
+      "origin": "EWR",
+      "dest": "MXP",
+      "route_label": "EWR \u2192 Milan Malpensa",
+      "cabin": "business",
+      "month": "june",
+      "price": 3171,
+      "airline": "Tap Air Portugal",
+      "duration_min": 690,
+      "outbound_date": "2027-06-07",
+      "return_date": "2027-06-19",
+      "fetched_at": "2026-07-25T09:56:16.646244+00:00"
+    },
+    {
+      "origin": "EWR",
+      "dest": "MXP",
+      "route_label": "EWR \u2192 Milan Malpensa",
+      "cabin": "premium_economy",
+      "month": "june",
+      "price": 1428,
+      "airline": "Tap Air Portugal",
+      "duration_min": 690,
+      "outbound_date": "2027-06-07",
+      "return_date": "2027-06-19",
+      "fetched_at": "2026-07-25T09:56:16.646244+00:00"
+    }
+  ]
 }
