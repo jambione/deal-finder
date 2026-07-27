@@ -1,7 +1,16 @@
 {
-  "fetched_at": "2026-07-26T10:13:13.729093+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-07-27T11:39:03.222739+00:00",
+  "score": -0.071,
   "signal": "neutral",
-  "headline_count": 18,
-  "top_headlines": []
+  "headline_count": 28,
+  "top_headlines": [
+    {
+      "headline": "Oil falls 8% as Iran and US pause strikes over Strait of Hormuz",
+      "score": -1
+    },
+    {
+      "headline": "US Stocks Catch a Bid as Oil Tumbles With Iran Conflict Pause",
+      "score": -1
+    }
+  ]
 }

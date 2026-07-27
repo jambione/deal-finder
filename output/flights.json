@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-26T10:07:58.418219+00:00",
+  "generated_at": "2026-07-27T11:33:16.523192+00:00",
   "flights": [
     {
       "origin": "JFK",
@@ -12,7 +12,7 @@
       "duration_min": 2445,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-07-26T10:07:58.418242+00:00"
+      "fetched_at": "2026-07-27T11:33:16.523216+00:00"
     },
     {
       "origin": "JFK",
@@ -25,7 +25,7 @@
       "duration_min": 740,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-07-26T10:07:58.418242+00:00"
+      "fetched_at": "2026-07-27T11:33:16.523216+00:00"
     },
     {
       "origin": "JFK",
@@ -33,12 +33,12 @@
       "route_label": "JFK \u2192 Milan Linate",
       "cabin": "business",
       "month": "june",
-      "price": 4018,
-      "airline": "Virgin Atlantic",
-      "duration_min": 690,
+      "price": 4417,
+      "airline": "American",
+      "duration_min": 760,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-07-26T10:07:58.418242+00:00"
+      "fetched_at": "2026-07-27T11:33:16.523216+00:00"
     },
     {
       "origin": "JFK",
@@ -51,7 +51,7 @@
       "duration_min": 665,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-07-26T10:07:58.418242+00:00"
+      "fetched_at": "2026-07-27T11:33:16.523216+00:00"
     },
     {
       "origin": "EWR",
@@ -64,7 +64,7 @@
       "duration_min": 690,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-07-26T10:07:58.418242+00:00"
+      "fetched_at": "2026-07-27T11:33:16.523216+00:00"
     },
     {
       "origin": "EWR",
@@ -77,7 +77,7 @@
       "duration_min": 690,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-07-26T10:07:58.418242+00:00"
+      "fetched_at": "2026-07-27T11:33:16.523216+00:00"
     }
   ]
 }
