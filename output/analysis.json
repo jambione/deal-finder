@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T11:39:04.237840+00:00",
+  "generated_at": "2026-07-28T10:47:36.911690+00:00",
   "recommendation": "wait",
   "recommendation_score": -2,
   "reason": "Oil prices are falling. Flight prices may follow. Consider waiting 2-4 weeks.",
@@ -11,9 +11,9 @@
   "signals": {
     "business_june": {
       "current_price": 3171,
-      "avg_30d": 3341.0,
+      "avg_30d": 3363.0,
       "trend_30d_pct": 17.4,
-      "vs_avg_pct": -5.1
+      "vs_avg_pct": -5.7
     },
     "premium_economy_june": {
       "current_price": 1428,
@@ -22,5 +22,5 @@
       "vs_avg_pct": -13.6
     }
   },
-  "days_of_history": 3
+  "days_of_history": 4
 }
