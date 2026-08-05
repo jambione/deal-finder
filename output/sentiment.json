@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-08-04T10:46:43.462154+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-08-05T10:44:05.321843+00:00",
+  "score": 0.034,
   "signal": "neutral",
-  "headline_count": 30,
-  "top_headlines": []
+  "headline_count": 29,
+  "top_headlines": [
+    {
+      "headline": "Stock Rally Wavers as Oil Rises on Shipping Threat: Markets Wrap",
+      "score": 1
+    }
+  ]
 }
