@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-08-06T10:46:54.679359+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-08-07T09:08:21.396573+00:00",
+  "score": 0.033,
   "signal": "neutral",
-  "headline_count": 28,
-  "top_headlines": []
+  "headline_count": 30,
+  "top_headlines": [
+    {
+      "headline": "Stocks Muted Before US Jobs Data, Crude Oil Gains: Markets Wrap",
+      "score": 1
+    }
+  ]
 }
