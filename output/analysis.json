@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-12T09:18:38.856655+00:00",
+  "generated_at": "2026-08-13T09:19:27.194867+00:00",
   "recommendation": "neutral",
   "recommendation_score": 0,
   "reason": "No strong signal either way. Monitor daily and buy if prices drop below your target.",
   "best_month": "june",
   "month_savings": 0,
-  "oil_month_change_pct": 19.91,
-  "oil_week_change_pct": -4.59,
+  "oil_month_change_pct": 9.24,
+  "oil_week_change_pct": -6.59,
   "sentiment_signal": "neutral",
   "signals": {
     "business_june": {
