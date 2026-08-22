@@ -238,5 +238,65 @@
     "price": 1428,
     "airline": "Tap Air Portugal",
     "oil_price": 80.77
+  },
+  {
+    "date": "2026-08-22",
+    "origin": "JFK",
+    "dest": "MXP",
+    "cabin": "business",
+    "month": "june",
+    "price": 2370,
+    "airline": "Air Serbia",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-22",
+    "origin": "JFK",
+    "dest": "MXP",
+    "cabin": "premium_economy",
+    "month": "june",
+    "price": 1430,
+    "airline": "JetBlue",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-22",
+    "origin": "JFK",
+    "dest": "LIN",
+    "cabin": "business",
+    "month": "june",
+    "price": 4041,
+    "airline": "Lufthansa",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-22",
+    "origin": "JFK",
+    "dest": "LIN",
+    "cabin": "premium_economy",
+    "month": "june",
+    "price": 2147,
+    "airline": "Brussels Airlines",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-22",
+    "origin": "EWR",
+    "dest": "MXP",
+    "cabin": "business",
+    "month": "june",
+    "price": 3173,
+    "airline": "Tap Air Portugal",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-22",
+    "origin": "EWR",
+    "dest": "MXP",
+    "cabin": "premium_economy",
+    "month": "june",
+    "price": 1437,
+    "airline": "Tap Air Portugal",
+    "oil_price": 84.05
   }
 ]
