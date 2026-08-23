@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-22T08:38:37.924249+00:00",
+  "generated_at": "2026-08-23T08:38:55.180611+00:00",
   "flights": [
     {
       "origin": "JFK",
@@ -12,7 +12,7 @@
       "duration_min": 760,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-08-22T08:38:37.924268+00:00"
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
     },
     {
       "origin": "JFK",
@@ -25,7 +25,33 @@
       "duration_min": 926,
       "outbound_date": "2027-06-14",
       "return_date": "2027-06-26",
-      "fetched_at": "2026-08-22T08:38:37.924268+00:00"
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
+    },
+    {
+      "origin": "JFK",
+      "dest": "MXP",
+      "route_label": "JFK \u2192 Milan Malpensa",
+      "cabin": "business",
+      "month": "july",
+      "price": 2719,
+      "airline": "Icelandair",
+      "duration_min": 1005,
+      "outbound_date": "2027-07-06",
+      "return_date": "2027-07-18",
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
+    },
+    {
+      "origin": "JFK",
+      "dest": "MXP",
+      "route_label": "JFK \u2192 Milan Malpensa",
+      "cabin": "premium_economy",
+      "month": "july",
+      "price": 1402,
+      "airline": "Condor",
+      "duration_min": 755,
+      "outbound_date": "2027-07-06",
+      "return_date": "2027-07-18",
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
     },
     {
       "origin": "JFK",
@@ -38,7 +64,7 @@
       "duration_min": 810,
       "outbound_date": "2027-06-21",
       "return_date": "2027-07-03",
-      "fetched_at": "2026-08-22T08:38:37.924268+00:00"
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
     },
     {
       "origin": "JFK",
@@ -49,9 +75,35 @@
       "price": 2147,
       "airline": "Brussels Airlines",
       "duration_min": 730,
-      "outbound_date": "2027-06-07",
-      "return_date": "2027-06-19",
-      "fetched_at": "2026-08-22T08:38:37.924268+00:00"
+      "outbound_date": "2027-06-14",
+      "return_date": "2027-06-26",
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
+    },
+    {
+      "origin": "JFK",
+      "dest": "LIN",
+      "route_label": "JFK \u2192 Milan Linate",
+      "cabin": "business",
+      "month": "july",
+      "price": 3908,
+      "airline": "Lufthansa",
+      "duration_min": 810,
+      "outbound_date": "2027-07-06",
+      "return_date": "2027-07-18",
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
+    },
+    {
+      "origin": "JFK",
+      "dest": "LIN",
+      "route_label": "JFK \u2192 Milan Linate",
+      "cabin": "premium_economy",
+      "month": "july",
+      "price": 2155,
+      "airline": "Brussels Airlines",
+      "duration_min": 730,
+      "outbound_date": "2027-07-06",
+      "return_date": "2027-07-18",
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
     },
     {
       "origin": "EWR",
@@ -64,7 +116,7 @@
       "duration_min": 690,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-08-22T08:38:37.924268+00:00"
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
     },
     {
       "origin": "EWR",
@@ -77,7 +129,33 @@
       "duration_min": 690,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-08-22T08:38:37.924268+00:00"
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
+    },
+    {
+      "origin": "EWR",
+      "dest": "MXP",
+      "route_label": "EWR \u2192 Milan Malpensa",
+      "cabin": "business",
+      "month": "july",
+      "price": 3172,
+      "airline": "Tap Air Portugal",
+      "duration_min": 690,
+      "outbound_date": "2027-07-06",
+      "return_date": "2027-07-18",
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
+    },
+    {
+      "origin": "EWR",
+      "dest": "MXP",
+      "route_label": "EWR \u2192 Milan Malpensa",
+      "cabin": "premium_economy",
+      "month": "july",
+      "price": 1401,
+      "airline": "Scandinavian Airlines",
+      "duration_min": 680,
+      "outbound_date": "2027-07-06",
+      "return_date": "2027-07-18",
+      "fetched_at": "2026-08-23T08:38:55.180634+00:00"
     }
   ]
 }
