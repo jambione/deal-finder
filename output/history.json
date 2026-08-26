@@ -658,5 +658,125 @@
     "price": 1401,
     "airline": "Scandinavian Airlines",
     "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "JFK",
+    "dest": "MXP",
+    "cabin": "business",
+    "month": "june",
+    "price": 2370,
+    "airline": "Air Serbia",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "JFK",
+    "dest": "MXP",
+    "cabin": "premium_economy",
+    "month": "june",
+    "price": 1340,
+    "airline": "Condor",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "JFK",
+    "dest": "MXP",
+    "cabin": "business",
+    "month": "july",
+    "price": 2370,
+    "airline": "Air Serbia",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "JFK",
+    "dest": "MXP",
+    "cabin": "premium_economy",
+    "month": "july",
+    "price": 1437,
+    "airline": "Tap Air Portugal",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "JFK",
+    "dest": "LIN",
+    "cabin": "business",
+    "month": "june",
+    "price": 4028,
+    "airline": "Austrian",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "JFK",
+    "dest": "LIN",
+    "cabin": "premium_economy",
+    "month": "june",
+    "price": 1560,
+    "airline": "Condor",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "JFK",
+    "dest": "LIN",
+    "cabin": "business",
+    "month": "july",
+    "price": 3907,
+    "airline": "Lufthansa",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "JFK",
+    "dest": "LIN",
+    "cabin": "premium_economy",
+    "month": "july",
+    "price": 2155,
+    "airline": "Brussels Airlines",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "EWR",
+    "dest": "MXP",
+    "cabin": "business",
+    "month": "june",
+    "price": 3173,
+    "airline": "Tap Air Portugal",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "EWR",
+    "dest": "MXP",
+    "cabin": "premium_economy",
+    "month": "june",
+    "price": 1433,
+    "airline": "Scandinavian Airlines",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "EWR",
+    "dest": "MXP",
+    "cabin": "business",
+    "month": "july",
+    "price": 3173,
+    "airline": "Tap Air Portugal",
+    "oil_price": 84.05
+  },
+  {
+    "date": "2026-08-26",
+    "origin": "EWR",
+    "dest": "MXP",
+    "cabin": "premium_economy",
+    "month": "july",
+    "price": 1401,
+    "airline": "Scandinavian Airlines",
+    "oil_price": 84.05
   }
 ]
