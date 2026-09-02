@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-09-01T13:25:33.158798+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-09-02T12:42:42.802188+00:00",
+  "score": 0.034,
   "signal": "neutral",
-  "headline_count": 32,
-  "top_headlines": []
+  "headline_count": 29,
+  "top_headlines": [
+    {
+      "headline": "US-Iran Clashes Hit Stocks as Oil Rises | Bloomberg Brief 09/02/2026",
+      "score": 1
+    }
+  ]
 }
