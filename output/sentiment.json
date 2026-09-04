@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-09-03T12:45:50.703088+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-09-04T12:39:42.664950+00:00",
+  "score": 0.032,
   "signal": "neutral",
-  "headline_count": 29,
-  "top_headlines": []
+  "headline_count": 31,
+  "top_headlines": [
+    {
+      "headline": "Soaring Jet Fuel Prices Cool Investor Appetite for Airline Bonds",
+      "score": 1
+    }
+  ]
 }
