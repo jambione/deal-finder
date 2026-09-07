@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-09-06T12:05:37.510188+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-09-07T14:11:06.670622+00:00",
+  "score": 0.033,
   "signal": "neutral",
-  "headline_count": 25,
-  "top_headlines": []
+  "headline_count": 30,
+  "top_headlines": [
+    {
+      "headline": "Stocks Drift as Oil Gains Keep Traders Cautious: Markets Wrap",
+      "score": 1
+    }
+  ]
 }
