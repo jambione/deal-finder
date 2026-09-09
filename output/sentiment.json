@@ -1,16 +1,7 @@
 {
-  "fetched_at": "2026-09-08T12:48:58.871314+00:00",
-  "score": 0.067,
+  "fetched_at": "2026-09-09T12:53:54.541771+00:00",
+  "score": 0.0,
   "signal": "neutral",
-  "headline_count": 30,
-  "top_headlines": [
-    {
-      "headline": "Stocks Slip as Oil Rally Fuels Inflation Jitters: Markets Wrap",
-      "score": 1
-    },
-    {
-      "headline": "Oil Rally Fuels Inflation Fears; Canada's US Tariffs Kick In",
-      "score": 1
-    }
-  ]
+  "headline_count": 33,
+  "top_headlines": []
 }
