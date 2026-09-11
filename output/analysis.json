@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-10T12:51:23.673341+00:00",
-  "recommendation": "neutral",
-  "recommendation_score": 0,
-  "reason": "No strong signal either way. Monitor daily and buy if prices drop below your target.",
+  "generated_at": "2026-09-11T12:46:21.056935+00:00",
+  "recommendation": "buy_now",
+  "recommendation_score": 2,
+  "reason": "Oil prices are rising and/or flight prices are near recent lows. Lock in now before surcharges increase.",
   "best_month": "june",
   "month_savings": 0,
-  "oil_month_change_pct": 0.13,
-  "oil_week_change_pct": -3.13,
+  "oil_month_change_pct": 15.51,
+  "oil_week_change_pct": 7.75,
   "sentiment_signal": "neutral",
   "signals": {
     "business_june": {
