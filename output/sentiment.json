@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-09-14T14:57:26.239650+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-09-15T13:24:36.623691+00:00",
+  "score": 0.031,
   "signal": "neutral",
-  "headline_count": 30,
-  "top_headlines": []
+  "headline_count": 32,
+  "top_headlines": [
+    {
+      "headline": "Stocks Slip as Oil Rally Keeps Bonds Under Strain: Markets Wrap",
+      "score": 1
+    }
+  ]
 }
