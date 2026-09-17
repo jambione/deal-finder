@@ -1,14 +1,10 @@
 {
-  "fetched_at": "2026-09-16T13:23:47.485357+00:00",
-  "current_price": 91.18,
-  "week_change_pct": 7.75,
-  "month_change_pct": 15.51,
-  "year_change_pct": 44.59,
+  "fetched_at": "2026-09-17T13:19:51.547026+00:00",
+  "current_price": 99.08,
+  "week_change_pct": 8.66,
+  "month_change_pct": 17.88,
+  "year_change_pct": 54.86,
   "history": [
-    {
-      "date": "2025-09-12",
-      "price": 63.06
-    },
     {
       "date": "2025-09-19",
       "price": 63.98
@@ -212,6 +208,10 @@
     {
       "date": "2026-09-04",
       "price": 91.18
+    },
+    {
+      "date": "2026-09-11",
+      "price": 99.08
     }
   ]
 }
