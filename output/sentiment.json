@@ -1,7 +1,16 @@
 {
-  "fetched_at": "2026-09-20T13:00:27.421802+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-09-21T15:02:23.694768+00:00",
+  "score": -0.069,
   "signal": "neutral",
-  "headline_count": 31,
-  "top_headlines": []
+  "headline_count": 29,
+  "top_headlines": [
+    {
+      "headline": "Battered government bonds rebound as oil falls below $100",
+      "score": -1
+    },
+    {
+      "headline": "Stocks, Bonds Climb as Oil Falls on US-Iran Hopes: Markets Wrap",
+      "score": -1
+    }
+  ]
 }
