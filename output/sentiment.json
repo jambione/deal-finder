@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-09-23T13:35:45.311782+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-09-24T13:30:50.208981+00:00",
+  "score": 0.036,
   "signal": "neutral",
-  "headline_count": 29,
-  "top_headlines": []
+  "headline_count": 28,
+  "top_headlines": [
+    {
+      "headline": "US Stock Futures Drop as Yields Climb Further, Oil Rises",
+      "score": 1
+    }
+  ]
 }
