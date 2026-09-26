@@ -1498,5 +1498,125 @@
     "price": 1360,
     "airline": "Tap Air Portugal",
     "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "JFK",
+    "dest": "MXP",
+    "cabin": "business",
+    "month": "june",
+    "price": 2722,
+    "airline": "Air Serbia",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "JFK",
+    "dest": "MXP",
+    "cabin": "premium_economy",
+    "month": "june",
+    "price": 1350,
+    "airline": "JetBlue",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "JFK",
+    "dest": "MXP",
+    "cabin": "business",
+    "month": "july",
+    "price": 2497,
+    "airline": "Air Serbia",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "JFK",
+    "dest": "MXP",
+    "cabin": "premium_economy",
+    "month": "july",
+    "price": 1360,
+    "airline": "Tap Air Portugal",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "JFK",
+    "dest": "LIN",
+    "cabin": "business",
+    "month": "june",
+    "price": 4026,
+    "airline": "Austrian",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "JFK",
+    "dest": "LIN",
+    "cabin": "premium_economy",
+    "month": "june",
+    "price": 1440,
+    "airline": "Condor",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "JFK",
+    "dest": "LIN",
+    "cabin": "business",
+    "month": "july",
+    "price": 3638,
+    "airline": "ITA",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "JFK",
+    "dest": "LIN",
+    "cabin": "premium_economy",
+    "month": "july",
+    "price": 1470,
+    "airline": "Condor",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "EWR",
+    "dest": "MXP",
+    "cabin": "business",
+    "month": "june",
+    "price": 3171,
+    "airline": "Tap Air Portugal",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "EWR",
+    "dest": "MXP",
+    "cabin": "premium_economy",
+    "month": "june",
+    "price": 1435,
+    "airline": "Tap Air Portugal",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "EWR",
+    "dest": "MXP",
+    "cabin": "business",
+    "month": "july",
+    "price": 3171,
+    "airline": "Tap Air Portugal",
+    "oil_price": 103.54
+  },
+  {
+    "date": "2026-09-26",
+    "origin": "EWR",
+    "dest": "MXP",
+    "cabin": "premium_economy",
+    "month": "july",
+    "price": 1360,
+    "airline": "Tap Air Portugal",
+    "oil_price": 103.54
   }
 ]

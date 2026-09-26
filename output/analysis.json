@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T13:37:02.104243+00:00",
+  "generated_at": "2026-09-26T12:59:05.502856+00:00",
   "recommendation": "buy_now",
   "recommendation_score": 2,
   "reason": "Oil prices are rising and/or flight prices are near recent lows. Lock in now before surcharges increase.",
@@ -11,28 +11,28 @@
   "signals": {
     "business_june": {
       "current_price": 3171,
-      "avg_30d": 3249.0,
-      "trend_30d_pct": 33.8,
-      "vs_avg_pct": -2.4
+      "avg_30d": 3260.0,
+      "trend_30d_pct": 27.1,
+      "vs_avg_pct": -2.7
     },
     "business_july": {
       "current_price": 3171,
-      "avg_30d": 3144.0,
-      "trend_30d_pct": 16.6,
-      "vs_avg_pct": 0.9
+      "avg_30d": 3128.0,
+      "trend_30d_pct": 4.3,
+      "vs_avg_pct": 1.4
     },
     "premium_economy_june": {
       "current_price": 1435,
-      "avg_30d": 1497.0,
-      "trend_30d_pct": 0.3,
-      "vs_avg_pct": -4.1
+      "avg_30d": 1470.0,
+      "trend_30d_pct": -0.1,
+      "vs_avg_pct": -2.4
     },
     "premium_economy_july": {
       "current_price": 1360,
-      "avg_30d": 1589.0,
-      "trend_30d_pct": -3.0,
-      "vs_avg_pct": -14.4
+      "avg_30d": 1563.0,
+      "trend_30d_pct": -5.4,
+      "vs_avg_pct": -13.0
     }
   },
-  "days_of_history": 15
+  "days_of_history": 16
 }
