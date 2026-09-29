@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-09-28T16:44:04.356525+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-09-29T14:46:59.397084+00:00",
+  "score": -0.034,
   "signal": "neutral",
-  "headline_count": 31,
-  "top_headlines": []
+  "headline_count": 29,
+  "top_headlines": [
+    {
+      "headline": "Stocks Churn After Rout as Brent Falls Below $105: Markets Wrap",
+      "score": -1
+    }
+  ]
 }
