@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-10-05T17:03:27.567061+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-10-06T14:59:37.311600+00:00",
+  "score": -0.034,
   "signal": "neutral",
   "headline_count": 29,
-  "top_headlines": []
+  "top_headlines": [
+    {
+      "headline": "S&P 500 Hits All-Time High on AI Bets as Oil Drops: Markets Wrap",
+      "score": -1
+    }
+  ]
 }
