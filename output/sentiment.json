@@ -1,12 +1,16 @@
 {
-  "fetched_at": "2026-10-06T14:59:37.311600+00:00",
-  "score": -0.034,
+  "fetched_at": "2026-10-07T15:27:50.445971+00:00",
+  "score": 0.062,
   "signal": "neutral",
-  "headline_count": 29,
+  "headline_count": 32,
   "top_headlines": [
     {
-      "headline": "S&P 500 Hits All-Time High on AI Bets as Oil Drops: Markets Wrap",
-      "score": -1
+      "headline": "Stocks, Bonds Fall on Inflation Worry as Oil Rises",
+      "score": 1
+    },
+    {
+      "headline": "Stocks, Bonds Fall on Inflation Worry as Oil Rises: Markets Wrap",
+      "score": 1
     }
   ]
 }
