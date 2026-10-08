@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-07T15:27:51.434665+00:00",
+  "generated_at": "2026-10-08T15:28:52.863737+00:00",
   "recommendation": "buy_now",
   "recommendation_score": 2,
   "reason": "Oil prices are rising and/or flight prices are near recent lows. Lock in now before surcharges increase.",
   "best_month": "june",
   "month_savings": 0,
-  "oil_month_change_pct": 10.58,
-  "oil_week_change_pct": -9.63,
+  "oil_month_change_pct": 7.56,
+  "oil_week_change_pct": 4.81,
   "sentiment_signal": "neutral",
   "signals": {
     "business_june": {
