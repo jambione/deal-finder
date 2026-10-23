@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-10-22T13:43:55.357796+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-10-23T13:19:25.889850+00:00",
+  "score": 0.031,
   "signal": "neutral",
-  "headline_count": 30,
-  "top_headlines": []
+  "headline_count": 32,
+  "top_headlines": [
+    {
+      "headline": "Tech Selloff Eases With Oil Gains Capping Relief: Markets Wrap",
+      "score": 1
+    }
+  ]
 }
