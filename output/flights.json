@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T13:17:27.137690+00:00",
+  "generated_at": "2026-10-24T12:35:49.054068+00:00",
   "flights": [
     {
       "origin": "JFK",
@@ -7,12 +7,12 @@
       "route_label": "JFK \u2192 Milan Malpensa",
       "cabin": "business",
       "month": "june",
-      "price": 2809,
+      "price": 2810,
       "airline": "Azores Airlines",
       "duration_min": 810,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "JFK",
@@ -20,12 +20,12 @@
       "route_label": "JFK \u2192 Milan Malpensa",
       "cabin": "premium_economy",
       "month": "june",
-      "price": 1280,
+      "price": 1240,
       "airline": "JetBlue",
       "duration_min": 926,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "JFK",
@@ -38,7 +38,7 @@
       "duration_min": 750,
       "outbound_date": "2027-07-06",
       "return_date": "2027-07-18",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "JFK",
@@ -46,12 +46,12 @@
       "route_label": "JFK \u2192 Milan Malpensa",
       "cabin": "premium_economy",
       "month": "july",
-      "price": 1359,
+      "price": 1358,
       "airline": "Tap Air Portugal",
       "duration_min": 740,
-      "outbound_date": "2027-07-13",
-      "return_date": "2027-07-25",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "outbound_date": "2027-07-20",
+      "return_date": "2027-08-01",
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "JFK",
@@ -59,12 +59,12 @@
       "route_label": "JFK \u2192 Milan Linate",
       "cabin": "business",
       "month": "june",
-      "price": 4221,
-      "airline": "Aer Lingus",
-      "duration_min": 715,
-      "outbound_date": "2027-06-21",
-      "return_date": "2027-07-03",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "price": 4130,
+      "airline": "Icelandair",
+      "duration_min": 990,
+      "outbound_date": "2027-06-07",
+      "return_date": "2027-06-19",
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "JFK",
@@ -77,7 +77,7 @@
       "duration_min": 1526,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "JFK",
@@ -88,9 +88,9 @@
       "price": 3675,
       "airline": "Lufthansa",
       "duration_min": 810,
-      "outbound_date": "2027-07-20",
-      "return_date": "2027-08-01",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "outbound_date": "2027-07-13",
+      "return_date": "2027-07-25",
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "JFK",
@@ -98,12 +98,12 @@
       "route_label": "JFK \u2192 Milan Linate",
       "cabin": "premium_economy",
       "month": "july",
-      "price": 2040,
-      "airline": "ITA",
-      "duration_min": 665,
+      "price": 2183,
+      "airline": "Lufthansa",
+      "duration_min": 810,
       "outbound_date": "2027-07-20",
       "return_date": "2027-08-01",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "EWR",
@@ -116,7 +116,7 @@
       "duration_min": 700,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "EWR",
@@ -129,7 +129,7 @@
       "duration_min": 705,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "EWR",
@@ -142,7 +142,7 @@
       "duration_min": 705,
       "outbound_date": "2027-07-06",
       "return_date": "2027-07-18",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     },
     {
       "origin": "EWR",
@@ -152,10 +152,10 @@
       "month": "july",
       "price": 1359,
       "airline": "Tap Air Portugal",
-      "duration_min": 700,
+      "duration_min": 705,
       "outbound_date": "2027-07-13",
       "return_date": "2027-07-25",
-      "fetched_at": "2026-10-23T13:17:27.137707+00:00"
+      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
     }
   ]
 }
