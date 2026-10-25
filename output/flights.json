@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T12:35:49.054068+00:00",
+  "generated_at": "2026-10-25T13:07:45.103606+00:00",
   "flights": [
     {
       "origin": "JFK",
@@ -12,7 +12,7 @@
       "duration_min": 810,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "JFK",
@@ -25,7 +25,7 @@
       "duration_min": 926,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "JFK",
@@ -38,7 +38,7 @@
       "duration_min": 750,
       "outbound_date": "2027-07-06",
       "return_date": "2027-07-18",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "JFK",
@@ -46,12 +46,12 @@
       "route_label": "JFK \u2192 Milan Malpensa",
       "cabin": "premium_economy",
       "month": "july",
-      "price": 1358,
+      "price": 1359,
       "airline": "Tap Air Portugal",
       "duration_min": 740,
-      "outbound_date": "2027-07-20",
-      "return_date": "2027-08-01",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "outbound_date": "2027-07-13",
+      "return_date": "2027-07-25",
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "JFK",
@@ -64,7 +64,7 @@
       "duration_min": 990,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "JFK",
@@ -72,12 +72,12 @@
       "route_label": "JFK \u2192 Milan Linate",
       "cabin": "premium_economy",
       "month": "june",
-      "price": 1800,
-      "airline": "American",
-      "duration_min": 1526,
+      "price": 1390,
+      "airline": "JetBlue",
+      "duration_min": 1146,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "JFK",
@@ -90,7 +90,7 @@
       "duration_min": 810,
       "outbound_date": "2027-07-13",
       "return_date": "2027-07-25",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "JFK",
@@ -98,12 +98,12 @@
       "route_label": "JFK \u2192 Milan Linate",
       "cabin": "premium_economy",
       "month": "july",
-      "price": 2183,
-      "airline": "Lufthansa",
-      "duration_min": 810,
+      "price": 2151,
+      "airline": "Austrian",
+      "duration_min": 625,
       "outbound_date": "2027-07-20",
       "return_date": "2027-08-01",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "EWR",
@@ -116,7 +116,7 @@
       "duration_min": 700,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "EWR",
@@ -129,7 +129,7 @@
       "duration_min": 705,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "EWR",
@@ -142,7 +142,7 @@
       "duration_min": 705,
       "outbound_date": "2027-07-06",
       "return_date": "2027-07-18",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     },
     {
       "origin": "EWR",
@@ -155,7 +155,7 @@
       "duration_min": 705,
       "outbound_date": "2027-07-13",
       "return_date": "2027-07-25",
-      "fetched_at": "2026-10-24T12:35:49.054092+00:00"
+      "fetched_at": "2026-10-25T13:07:45.103629+00:00"
     }
   ]
 }
