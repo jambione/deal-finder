@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-10-25T13:10:20.249083+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-10-26T15:07:37.676576+00:00",
+  "score": -0.032,
   "signal": "neutral",
-  "headline_count": 28,
-  "top_headlines": []
+  "headline_count": 31,
+  "top_headlines": [
+    {
+      "headline": "Stocks Climb as Anthropic Files for IPO; Oil Falls: Markets Wrap",
+      "score": -1
+    }
+  ]
 }
