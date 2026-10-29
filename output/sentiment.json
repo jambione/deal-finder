@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-10-28T15:03:23.544611+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-10-29T15:08:17.329953+00:00",
+  "score": -0.033,
   "signal": "neutral",
-  "headline_count": 31,
-  "top_headlines": []
+  "headline_count": 30,
+  "top_headlines": [
+    {
+      "headline": "Oil Slides as Traders Weigh Signs of Tentative Iran Diplomacy",
+      "score": -1
+    }
+  ]
 }
