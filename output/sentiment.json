@@ -1,12 +1,7 @@
 {
-  "fetched_at": "2026-11-02T18:08:52.192606+00:00",
-  "score": -0.032,
+  "fetched_at": "2026-11-03T16:02:48.155411+00:00",
+  "score": 0.0,
   "signal": "neutral",
-  "headline_count": 31,
-  "top_headlines": [
-    {
-      "headline": "Oil tumbles on hopes for US-Iran talks",
-      "score": -1
-    }
-  ]
+  "headline_count": 33,
+  "top_headlines": []
 }
