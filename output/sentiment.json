@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-11-09T18:38:36.591687+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-11-10T16:20:36.696341+00:00",
+  "score": -0.03,
   "signal": "neutral",
-  "headline_count": 32,
-  "top_headlines": []
+  "headline_count": 33,
+  "top_headlines": [
+    {
+      "headline": "Angola Bonds Top Emerging-Market Selloff as Oil Slumps to $90",
+      "score": -1
+    }
+  ]
 }
