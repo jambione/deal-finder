@@ -1,7 +1,12 @@
 {
-  "fetched_at": "2026-11-11T16:01:21.262244+00:00",
-  "score": 0.0,
+  "fetched_at": "2026-11-12T16:43:50.875360+00:00",
+  "score": 0.032,
   "signal": "neutral",
   "headline_count": 31,
-  "top_headlines": []
+  "top_headlines": [
+    {
+      "headline": "Oil Rises After Trump Says the US Doesn\u2019t Need a Deal With Iran",
+      "score": 1
+    }
+  ]
 }
