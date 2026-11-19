@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-18T17:08:13.804549+00:00",
+  "generated_at": "2026-11-19T17:15:03.520856+00:00",
   "recommendation": "wait",
-  "recommendation_score": -2,
+  "recommendation_score": -4,
   "reason": "Oil prices are falling. Flight prices may follow. Consider waiting 2-4 weeks.",
   "best_month": "june",
   "month_savings": 0,
-  "oil_month_change_pct": -0.94,
-  "oil_week_change_pct": -9.11,
+  "oil_month_change_pct": -9.16,
+  "oil_week_change_pct": -5.41,
   "sentiment_signal": "neutral",
   "signals": {
     "business_june": {
