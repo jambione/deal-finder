@@ -1,38 +1,38 @@
 {
-  "generated_at": "2026-11-24T19:29:37.735805+00:00",
-  "recommendation": "wait",
-  "recommendation_score": -2,
-  "reason": "Oil prices are falling. Flight prices may follow. Consider waiting 2-4 weeks.",
+  "generated_at": "2026-11-25T18:37:27.514434+00:00",
+  "recommendation": "neutral",
+  "recommendation_score": 0,
+  "reason": "No strong signal either way. Monitor daily and buy if prices drop below your target.",
   "best_month": "july",
-  "month_savings": 767,
-  "oil_month_change_pct": -9.16,
-  "oil_week_change_pct": -5.41,
+  "month_savings": 598,
+  "oil_month_change_pct": 0,
+  "oil_week_change_pct": 0,
   "sentiment_signal": "neutral",
   "signals": {
     "business_june": {
-      "current_price": 3518,
-      "avg_30d": 3354.0,
-      "trend_30d_pct": 25.2,
-      "vs_avg_pct": 4.9
+      "current_price": 3349,
+      "avg_30d": 3346.0,
+      "trend_30d_pct": 19.2,
+      "vs_avg_pct": 0.1
     },
     "business_july": {
       "current_price": 2751,
-      "avg_30d": 3154.0,
+      "avg_30d": 3129.0,
       "trend_30d_pct": 1.0,
-      "vs_avg_pct": -12.8
+      "vs_avg_pct": -12.1
     },
     "premium_economy_june": {
       "current_price": 1432,
-      "avg_30d": 1397.0,
+      "avg_30d": 1370.0,
       "trend_30d_pct": 11.9,
-      "vs_avg_pct": 2.5
+      "vs_avg_pct": 4.5
     },
     "premium_economy_july": {
       "current_price": 1357,
-      "avg_30d": 1537.0,
+      "avg_30d": 1508.0,
       "trend_30d_pct": -0.1,
-      "vs_avg_pct": -11.7
+      "vs_avg_pct": -10.0
     }
   },
-  "days_of_history": 28
+  "days_of_history": 29
 }
