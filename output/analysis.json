@@ -1,38 +1,38 @@
 {
-  "generated_at": "2026-11-25T18:37:27.514434+00:00",
+  "generated_at": "2026-11-26T18:22:06.197516+00:00",
   "recommendation": "neutral",
   "recommendation_score": 0,
   "reason": "No strong signal either way. Monitor daily and buy if prices drop below your target.",
   "best_month": "july",
-  "month_savings": 598,
+  "month_savings": 590,
   "oil_month_change_pct": 0,
   "oil_week_change_pct": 0,
   "sentiment_signal": "neutral",
   "signals": {
     "business_june": {
-      "current_price": 3349,
+      "current_price": 3341,
       "avg_30d": 3346.0,
-      "trend_30d_pct": 19.2,
-      "vs_avg_pct": 0.1
+      "trend_30d_pct": 18.9,
+      "vs_avg_pct": -0.1
     },
     "business_july": {
       "current_price": 2751,
-      "avg_30d": 3129.0,
+      "avg_30d": 3111.0,
       "trend_30d_pct": 1.0,
-      "vs_avg_pct": -12.1
+      "vs_avg_pct": -11.6
     },
     "premium_economy_june": {
-      "current_price": 1432,
-      "avg_30d": 1370.0,
-      "trend_30d_pct": 11.9,
-      "vs_avg_pct": 4.5
+      "current_price": 1433,
+      "avg_30d": 1351.0,
+      "trend_30d_pct": 15.6,
+      "vs_avg_pct": 6.1
     },
     "premium_economy_july": {
       "current_price": 1357,
-      "avg_30d": 1508.0,
+      "avg_30d": 1484.0,
       "trend_30d_pct": -0.1,
-      "vs_avg_pct": -10.0
+      "vs_avg_pct": -8.6
     }
   },
-  "days_of_history": 29
+  "days_of_history": 30
 }

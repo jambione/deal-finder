@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T18:35:10.724766+00:00",
+  "generated_at": "2026-11-26T18:19:16.858713+00:00",
   "flights": [
     {
       "origin": "JFK",
@@ -12,7 +12,7 @@
       "duration_min": 760,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "JFK",
@@ -25,7 +25,7 @@
       "duration_min": 1170,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "JFK",
@@ -36,9 +36,9 @@
       "price": 2736,
       "airline": "Air Serbia",
       "duration_min": 750,
-      "outbound_date": "2027-07-13",
-      "return_date": "2027-07-25",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "outbound_date": "2027-07-06",
+      "return_date": "2027-07-18",
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "JFK",
@@ -51,7 +51,7 @@
       "duration_min": 940,
       "outbound_date": "2027-07-13",
       "return_date": "2027-07-25",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "JFK",
@@ -64,7 +64,7 @@
       "duration_min": 866,
       "outbound_date": "2027-06-14",
       "return_date": "2027-06-26",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "JFK",
@@ -77,7 +77,7 @@
       "duration_min": 695,
       "outbound_date": "2027-06-07",
       "return_date": "2027-06-19",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "JFK",
@@ -90,7 +90,7 @@
       "duration_min": 625,
       "outbound_date": "2027-07-20",
       "return_date": "2027-08-01",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "JFK",
@@ -103,7 +103,7 @@
       "duration_min": 695,
       "outbound_date": "2027-07-06",
       "return_date": "2027-07-18",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "EWR",
@@ -111,12 +111,12 @@
       "route_label": "EWR \u2192 Milan Malpensa",
       "cabin": "business",
       "month": "june",
-      "price": 3349,
+      "price": 3341,
       "airline": "Scandinavian Airlines",
       "duration_min": 680,
-      "outbound_date": "2027-06-21",
-      "return_date": "2027-07-03",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "outbound_date": "2027-06-14",
+      "return_date": "2027-06-26",
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "EWR",
@@ -124,12 +124,12 @@
       "route_label": "EWR \u2192 Milan Malpensa",
       "cabin": "premium_economy",
       "month": "june",
-      "price": 1432,
+      "price": 1433,
       "airline": "Tap Air Portugal",
       "duration_min": 705,
       "outbound_date": "2027-06-21",
       "return_date": "2027-07-03",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "EWR",
@@ -142,7 +142,7 @@
       "duration_min": 495,
       "outbound_date": "2027-07-06",
       "return_date": "2027-07-18",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     },
     {
       "origin": "EWR",
@@ -155,7 +155,7 @@
       "duration_min": 705,
       "outbound_date": "2027-07-13",
       "return_date": "2027-07-25",
-      "fetched_at": "2026-11-25T18:35:10.724791+00:00"
+      "fetched_at": "2026-11-26T18:19:16.858767+00:00"
     }
   ]
 }
